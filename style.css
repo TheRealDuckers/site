@@ -331,6 +331,24 @@ footer {
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
+.projects-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ff8c00; /* orange accent */
+  margin: 3rem 0 2rem;
+  position: relative;
+}
 
+/* underline accent */
+.projects-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: #ff8c00;
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
 
 
