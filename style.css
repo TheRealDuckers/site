@@ -164,13 +164,6 @@ button:hover {
   color: var(--black);
 }
 
-/* Portfolio Grid */
-.portfolio {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-}
 
 .card {
   background: var(--blue-3);
@@ -260,13 +253,83 @@ footer {
   color: var(--text-muted);
 }
 
-/* Animations */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-  100% { transform: scale(1); }
+
+/* Portfolio grid */
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
 }
 
+/* Card styling */
+.card {
+  position: relative;
+  background: #101a27; /* dark slate */
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  overflow: hidden;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.6);
+}
+
+/* Card content */
+.card h3 {
+  color: #ff8c00; /* orange accent */
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: #ddd;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+/* GitHub button */
+.github-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #ff8c00;
+  border-radius: 8px;
+  color: #ff8c00;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.github-btn span {
+  display: inline-block;
+  transform: skew(10deg);
+}
+
+/* Animated fill on hover */
+.github-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ff8c00;
+  transform: translateX(-100%) skew(-10deg);
+  transition: transform 0.4s ease;
+  z-index: -1;
+}
+
+.github-btn:hover::before {
+  transform: translateX(0) skew(-10deg);
+}
+
+.github-btn:hover {
+  color: #000;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
 
 
 
