@@ -251,3 +251,50 @@ footer {
   50% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
+
+/* Ducks on card corners */
+.card::before,
+.card::after {
+  content: "🦆";
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.8;
+  transform: rotate(-15deg);
+}
+
+/* Top-left corner duck */
+.card::before {
+  top: -0.5rem;
+  left: -0.5rem;
+  transform: rotate(-20deg);
+}
+
+/* Bottom-right corner duck */
+.card::after {
+  bottom: -0.5rem;
+  right: -0.5rem;
+  transform: rotate(15deg);
+}
+
+/* Peeking duck from behind header image */
+.circle-img::after {
+  content: "🦆";
+  position: absolute;
+  bottom: -0.5rem;
+  right: -0.5rem;
+  font-size: 2rem;
+  opacity: 0.7;
+  transform: rotate(25deg);
+}
+
+/* Peeking duck from side of About card */
+.about-card::after {
+  content: "🦆";
+  position: absolute;
+  top: 50%;
+  left: -1.5rem;
+  transform: translateY(-50%) rotate(-10deg);
+  font-size: 1.8rem;
+  opacity: 0.8;
+}
+
