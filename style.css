@@ -1,0 +1,138 @@
+/* Root palette */
+:root {
+  --c1: #112e4a;  /* deep blue */
+  --c2: #112438;  /* navy */
+  --c3: #101a27;  /* dark slate */
+  --c4: #0a1017;  /* near black */
+  --c5: #000000;  /* black */
+  --accent: #00adb5; /* optional accent highlight */
+}
+
+/* Global reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: var(--c4);
+  color: #f5f5f5;
+  line-height: 1.6;
+}
+
+/* Navbar */
+nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--c5);
+  z-index: 100;
+}
+
+nav h1 {
+  font-size: 1.2rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+nav .links {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 1px dashed #888;
+  border-radius: 6px;
+  color: #ddd;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--c3);
+}
+
+/* Hero / header section */
+.hero {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, var(--c2), var(--c3));
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.hero p {
+  max-width: 600px;
+  color: #bbb;
+}
+
+/* Cards / sections */
+.section {
+  padding: 4rem 2rem;
+  background: var(--c4);
+}
+
+.card {
+  background: var(--c3);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+}
+
+.card h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.card p {
+  color: #aaa;
+}
+
+/* Footer */
+footer {
+  background: var(--c5);
+  color: #777;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+button {
+  padding: 0.8rem 1.4rem;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: var(--accent);
+  color: var(--c5);
+}
