@@ -1,0 +1,49 @@
+/* Base duck styling */
+.duck {
+  position: absolute;
+  width: 40px;   /* adjust size */
+  height: auto;
+  z-index: 5;
+  pointer-events: none; /* ducks are decorative */
+}
+
+/* Duck in a corner */
+.duck-corner {
+  top: -10px;
+  left: -10px;
+  transform: rotate(-20deg);
+}
+
+/* Duck peeking from the side */
+.duck-side {
+  top: 50%;
+  left: -20px;
+  transform: translateY(-50%) rotate(10deg);
+}
+
+/* Duck sitting on top */
+.duck-top {
+  top: -25px;
+  right: 20px;
+  transform: rotate(-5deg);
+}
+
+/* Duck peering down from above */
+.duck-peek {
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%) rotate(15deg);
+}
+
+/* Optional hover wiggle */
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.duck:hover {
+  animation: wiggle 0.6s ease;
+}
