@@ -1,14 +1,11 @@
-/* Root palette */
 :root {
-  --c1: #112e4a;  /* deep blue */
-  --c2: #112438;  /* navy */
-  --c3: #101a27;  /* dark slate */
-  --c4: #0a1017;  /* near black */
-  --c5: #000000;  /* black */
-  --accent: #00adb5; /* optional accent highlight */
+  --accent: #00adb5;
+  --dark-1: #111;
+  --dark-2: #222;
+  --light-text: #f5f5f5;
 }
 
-/* Global reset */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -17,12 +14,11 @@
 
 body {
   font-family: "Helvetica Neue", Arial, sans-serif;
-  background: var(--c4);
-  color: #f5f5f5;
-  line-height: 1.6;
+  color: #333;
+  background: var(--dark-2);
 }
 
-/* Navbar */
+/* Sticky Navbar */
 nav {
   position: sticky;
   top: 0;
@@ -30,14 +26,13 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: var(--c5);
-  z-index: 100;
+  background: var(--dark-1);
+  color: var(--light-text);
+  z-index: 10;
 }
 
-nav h1 {
+nav h2 {
   font-size: 1.2rem;
-  color: #fff;
-  letter-spacing: 1px;
 }
 
 nav .links {
@@ -47,92 +42,189 @@ nav .links {
 
 nav a {
   display: inline-block;
-  padding: 0.6rem 1.2rem;
-  border: 1px dashed #888;
+  padding: 0.5rem 1rem;
+  border: 2px dashed var(--light-text);
   border-radius: 6px;
-  color: #ddd;
+  color: var(--light-text);
   text-decoration: none;
+  position: relative;
   transition: all 0.3s ease;
 }
 
 nav a:hover {
+  background: var(--accent);
   border-color: var(--accent);
-  color: var(--accent);
-  background: var(--c3);
+  transform: scale(1.05);
 }
 
-/* Hero / header section */
-.hero {
-  min-height: 80vh;
+/* Duck peeking from side of nav links */
+nav a::after {
+  content: "🦆";
+  position: absolute;
+  right: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease, right 0.3s ease;
+}
+
+nav a:hover::after {
+  opacity: 1;
+  right: -2rem;
+}
+
+/* Background image behind everything */
+.background {
+  position: fixed;
+  inset: 0;
+  background: url('https://img.freepik.com/premium-photo/new-year-scene-clean-background_964851-28164.jpg') center/cover no-repeat;
+  z-index: -1;
+}
+
+/* Header content */
+.header {
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, var(--c2), var(--c3));
+  justify-content: center;
   text-align: center;
-  padding: 2rem;
+  color: var(--light-text);
+  background: rgba(0, 0, 0, 0.4);
 }
 
-.hero h2 {
-  font-size: 2.5rem;
+.circle-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid var(--accent);
   margin-bottom: 1rem;
-  color: #fff;
+  animation: pulse 3s infinite;
 }
 
-.hero p {
-  max-width: 600px;
-  color: #bbb;
+.circle-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Cards / sections */
-.section {
-  padding: 4rem 2rem;
-  background: var(--c4);
+.header h1 {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+}
+
+.header p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+/* Portfolio grid */
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
 }
 
 .card {
-  background: var(--c3);
+  background: #fff;
   border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.25s ease;
+  position: relative;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
 .card h3 {
-  color: #fff;
-  margin-bottom: 1rem;
+  padding: 1rem;
 }
 
-.card p {
-  color: #aaa;
+/* Ducks randomly placed in cards */
+.card::after {
+  content: "🦆";
+  position: absolute;
+  font-size: 1.5rem;
+  top: calc(60% + (var(--rand-top, 0) * 10%));
+  left: calc(10% + (var(--rand-left, 0) * 1%));
+  opacity: 0.7;
 }
 
 /* Footer */
 footer {
-  background: var(--c5);
-  color: #777;
   text-align: center;
   padding: 1rem;
-  font-size: 0.9rem;
+  background: var(--dark-1);
+  color: #aaa;
 }
 
-/* Buttons */
-button {
-  padding: 0.8rem 1.4rem;
-  border: 1px solid var(--accent);
-  background: transparent;
+/* Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* About Me Section */
+.about-me {
+  padding: 3rem 2rem;
+  display: flex;
+  justify-content: center;
+  background: none;
+}
+
+.about-card {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.about-img {
+  flex: 1 1 280px;
+  min-width: 260px;
+  max-width: 340px;
+  overflow: hidden;
+}
+
+.about-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-text {
+  flex: 2 1 400px;
+  padding: 2rem;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
   color: var(--accent);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-button:hover {
-  background: var(--accent);
-  color: var(--c5);
+.about-text p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: #444;
 }
