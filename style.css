@@ -27,8 +27,9 @@ body {
     var(--blue-4) 75%,
     var(--black) 100%
   );
-  background-attachment: fixed;
   line-height: 1.6;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 nav {
@@ -165,7 +166,7 @@ button:hover {
 
 
 .card {
-  background: var(--blue-3);
+  background: rgba(16, 26, 39, 0.85); /* semi-transparent overlay */
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   overflow: hidden;
@@ -360,6 +361,7 @@ footer {
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
+
 
 
 
