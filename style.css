@@ -30,6 +30,8 @@ body {
   line-height: 1.6;
   background-attachment: fixed;
   min-height: 100vh;
+  background-size: cover; 
+  overflow-x: hidden;       
 }
 
 nav {
@@ -361,6 +363,7 @@ footer {
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
+
 
 
 
