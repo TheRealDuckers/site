@@ -6,6 +6,7 @@
   <title>duckers</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="ducks.css">
+  
 </head>
 <body>
   <!-- Bg image -->
@@ -87,6 +88,34 @@
   </div>
 </section>
 
+<!-- Trigger button -->
+<h1 class="projects-title">Enjoyed your visit?</h1>
+<button id="guestbook-btn">Open Guestbook</button>
+
+
+<div id="guestbook-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Guestbook</h2>
+    <script src="https://giscus.app/client.js"
+            data-repo="yourusername/yourrepo"
+            data-repo-id="YOUR_REPO_ID"
+            data-category="General"
+            data-category-id="YOUR_CATEGORY_ID"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+</div>
+
+  
   <footer>
     <p>Hmmm.... this site is v3. Took a while to get to this point, i guess...</p>
   </footer>
