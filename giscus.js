@@ -1,16 +1,11 @@
-<script src="https://giscus.app/client.js"
-        data-repo="TheRealDuckers/site"
-        data-repo-id="R_kgDOQom_YQ"
-        data-category="General"
-        data-category-id="DIC_kwDOQom_Yc4Cz7Yg"
-        data-mapping="specific"
-        data-term="Guest Book"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark_tritanopia"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
+const modal = document.getElementById("guestbook-modal");
+const btn = document.getElementById("guestbook-btn");
+const span = document.querySelector(".close");
+
+btn.onclick = () => { modal.style.display = "block"; }
+span.onclick = () => { modal.style.display = "none"; }
+window.onclick = (event) => {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
