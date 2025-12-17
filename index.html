@@ -90,15 +90,16 @@
 
 <!-- Trigger button -->
 <h1 class="projects-title">Enjoyed your visit?</h1>
-<button class="github-btn" id="guestbook-btn">Open Guestbook</button>
+<h href="#guestbook"></h><button class="github-btn" id="guestbook-btn">Open Guestbook</button>
 
 
 <div id="guestbook-modal" class="modal">
+  <section id="#guestbook"></section>
   <div class="modal-content">
     <span class="close">&times;</span>
-    <div align="center">
+    <center>
     <h2>Guestbook</h2>
-      </div>
+    </center>
     <script src="https://giscus.app/client.js"
         data-repo="TheRealDuckers/site"
         data-repo-id="R_kgDOQom_YQ"
@@ -117,6 +118,7 @@
         async>
 </script>
   </div>
+</section>
 </div>
 
   
@@ -124,5 +126,19 @@
     <p>Hmmm.... this site is v3. Took a while to get to this point, i guess...</p>
   </footer>
 </body>
+
+<script>
+  const modal = document.getElementById("guestbook-modal");
+const btn = document.getElementById("guestbook-btn");
+const span = document.querySelector(".close");
+
+btn.onclick = () => { modal.style.display = "block"; }
+span.onclick = () => { modal.style.display = "none"; }
+window.onclick = (event) => {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
 </html>
 
