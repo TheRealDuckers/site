@@ -54,16 +54,17 @@ body::before {
     height: 100%;
     background: linear-gradient(to bottom, #4b0000, #1a0000);
     z-index: 9999;
-    animation: openCurtains 2.5s ease forwards;
   }
-  .curtain-left { left: 0; transform: translateX(0); }
-  .curtain-right { right: 0; transform: translateX(0); }
-
-  @keyframes openCurtains {
-    to { transform: translateX(-100%); }
+  .curtain-left {
+    left: 0;
+    animation: openCurtainsLeft 2.5s ease forwards;
   }
   .curtain-right {
+    right: 0;
     animation: openCurtainsRight 2.5s ease forwards;
+  }
+  @keyframes openCurtainsLeft {
+    to { transform: translateX(-100%); }
   }
   @keyframes openCurtainsRight {
     to { transform: translateX(100%); }
@@ -79,7 +80,7 @@ body::before {
   backdrop-filter: blur(6px);
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin: 1.5rem 1rem;
 }
 
 .title-bar {
@@ -108,6 +109,14 @@ body::before {
   line-height: 1.6;
 }
 
+/* more breathing room on desktop */
+@media (min-width: 900px) {
+  .window {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+}
+
 /* ============================================================
    TWO-COLUMN DESKTOP LAYOUT
    ============================================================ */
@@ -117,7 +126,6 @@ body::before {
   gap: 2rem;
   margin: 2rem auto;
   max-width: 1200px;
-  padding: 0 1rem;
 }
 
 @media (min-width: 900px) {
@@ -126,12 +134,8 @@ body::before {
   }
   .columns .window {
     flex: 1;
-  }
-}
-
-   @media (min-width: 900px) {
-  .columns {
-    padding: 0 3rem; /* or 4rem if you want more breathing room */
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
@@ -165,12 +169,42 @@ body::before {
   border-radius: 6px;
   min-height: 200px;
   white-space: pre-wrap;
+  font-size: 0.9rem;
+}
+
+.terminal-log {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.terminal-prompt {
+  margin-right: 0.4rem;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed #ffbf47;
+  color: #ffbf47;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
 }
 
 .cursor {
   display: inline-block;
-  width: 10px;
+  width: 8px;
+  height: 1em;
   background: #ffbf47;
+  margin-left: 2px;
   animation: blink 1s steps(1) infinite;
 }
 
@@ -186,15 +220,15 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.8);
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95);
   border: 2px dashed #fff;
-  padding: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
   width: 90%;
   max-width: 500px;
   z-index: 10000;
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 #guestbook-modal.show {
@@ -248,6 +282,9 @@ a:hover {
     <div class="content">
       <h1>Your Name</h1>
       <p>creative technologist • designer • theatre enjoyer</p>
+      <p style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+        Try commands in the contact terminal below. Also: <a href="javascript:void(0)" onclick="openGuestbook()">open guestbook</a>.
+      </p>
     </div>
   </section>
 
@@ -302,7 +339,9 @@ a:hover {
 <section class="window">
   <div class="title-bar"><span>github-snake.terminal</span></div>
   <div class="content">
-    <div id="snake-terminal" class="terminal"></div>
+    <div id="snake-terminal" class="terminal">
+      <div id="snake-log" class="terminal-log"></div>
+    </div>
   </div>
 </section>
 
@@ -312,7 +351,14 @@ a:hover {
 <section class="window">
   <div class="title-bar"><span>contact.terminal</span></div>
   <div class="content">
-    <div id="contact-terminal" class="terminal"></div>
+    <div id="contact-terminal" class="terminal">
+      <div id="contact-log" class="terminal-log"></div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">&gt;</span>
+        <input id="contact-input" class="terminal-input" autocomplete="off" />
+        <span class="cursor"></span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -340,110 +386,158 @@ document.addEventListener("mousemove", e => {
 /* ============================================================
    TERMINAL: GITHUB SNAKE
    ============================================================ */
-const snakeTerm = document.getElementById("snake-terminal");
-snakeTerm.innerText = "> fetching GitHub activity...\n";
+const snakeLog = document.getElementById("snake-log");
+snakeLog.textContent = "> fetching GitHub activity...\n";
 setTimeout(() => {
-  snakeTerm.innerText += "> rendering snake...\n";
-}, 1000);
+  snakeLog.textContent += "> rendering snake...\n";
+}, 900);
 setTimeout(() => {
-  snakeTerm.innerHTML += '<img src="https://raw.githubusercontent.com/Platane/snk/output/github-contribution-grid-snake.svg" style="width:100%;margin-top:1rem;">';
-}, 2000);
+  snakeLog.innerHTML += '<img src="https://raw.githubusercontent.com/Platane/snk/output/github-contribution-grid-snake.svg" style="width:100%;margin-top:1rem;" alt="GitHub snake">';
+}, 1800);
 
 /* ============================================================
    TERMINAL: CONTACT
    ============================================================ */
-const contactTerm = document.getElementById("contact-terminal");
+const contactLog = document.getElementById("contact-log");
+const contactInput = document.getElementById("contact-input");
 
-let contactOutput = 
+const introText =
 `amber-terminal v1.0
 ------------------------------------
-> help
-Available commands:
+Type 'help' to see available commands.
+------------------------------------
+`;
+
+contactLog.textContent = introText;
+
+const helpText =
+`Available commands:
   contact email
   contact slack
   contact form
   contact now
+  guestbook
   clear
-------------------------------------
 `;
 
-contactTerm.innerText = contactOutput;
+function writeToContactLog(text) {
+  contactLog.textContent += text + "\n";
+  contactLog.scrollTop = contactLog.scrollHeight;
+}
 
-document.addEventListener("keydown", e => {
+contactInput.addEventListener("keydown", e => {
   if (e.key === "Enter") {
-    handleCommand();
+    e.preventDefault();
+    const cmd = contactInput.value.trim();
+    if (!cmd) return;
+    handleContactCommand(cmd);
+    contactInput.value = "";
   }
 });
 
-function handleCommand() {
-  const cmd = prompt("Enter command:");
-  if (!cmd) return;
+function handleContactCommand(cmd) {
+  writeToContactLog("> " + cmd);
 
-  if (cmd === "contact email") {
-    contactTerm.innerText += "\n> contact email\nyou@example.com\n";
-  }
-  else if (cmd === "contact slack") {
-    contactTerm.innerText += "\n> contact slack\nhttps://yourslackworkspace.slack.com\n";
-  }
-  else if (cmd === "contact now") {
-    contactTerm.innerText += "\n> contact now\nDialing...\n(+44) 1234 567890\n";
-  }
-  else if (cmd === "contact form") {
-    contactTerm.innerText += "\n> contact form\nOpening contact form...\n";
-
-    contactTerm.innerHTML += `
-      <form id="contactForm" style="margin-top:1rem;" onsubmit="submitForm(event)">
-        <input name="access_key" type="hidden" value="YOUR-WEB3FORMS-ACCESS-KEY-HERE">
-        <label>Name:</label><br>
-        <input name="name" required style="width:100%;"><br><br>
-        <label>Email:</label><br>
-        <input name="email" type="email" required style="width:100%;"><br><br>
-        <label>Message:</label><br>
-        <textarea name="message" required style="width:100%;height:80px;"></textarea><br><br>
-        <button type="submit">Submit</button>
-      </form>
-    `;
-  }
-  else if (cmd === "clear") {
-    contactTerm.innerText = contactOutput;
-  }
-  else {
-    contactTerm.innerText += `\n> ${cmd}\nUnknown command.\n`;
+  if (cmd === "help") {
+    writeToContactLog(helpText);
+  } else if (cmd === "contact email") {
+    writeToContactLog("you@example.com");
+  } else if (cmd === "contact slack") {
+    writeToContactLog("https://yourslackworkspace.slack.com");
+  } else if (cmd === "contact now") {
+    writeToContactLog("Dialing...");
+    writeToContactLog("(+44) 1234 567890");
+  } else if (cmd === "contact form") {
+    showContactForm();
+  } else if (cmd === "guestbook") {
+    writeToContactLog("Opening guestbook...");
+    openGuestbook();
+  } else if (cmd === "clear") {
+    contactLog.textContent = introText;
+  } else {
+    writeToContactLog("Unknown command. Type 'help' for options.");
   }
 }
 
-function submitForm(e) {
-  e.preventDefault();
-  const form = e.target;
-  contactTerm.innerText += "\nSending...\n";
+/* Inject Web3Forms form */
+function showContactForm() {
+  writeToContactLog("Opening contact form...");
+  const formHtml = `
+------------------------------------
+Name:
+Email:
+Message:
+[ Submit ]
+------------------------------------
+  `;
+  writeToContactLog(formHtml);
 
-  fetch("https://api.web3forms.com/submit", {
-    method: "POST",
-    body: new FormData(form)
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      contactTerm.innerText += "✔ Message sent successfully!\n";
-    } else {
-      contactTerm.innerText += "✖ Error sending message.\n";
-    }
+  // Create actual form element below the log
+  const existingForm = document.getElementById("contactForm");
+  if (existingForm) existingForm.remove();
+
+  const form = document.createElement("form");
+  form.id = "contactForm";
+  form.style.marginTop = "0.5rem";
+
+  form.innerHTML = `
+    <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY-HERE">
+    <label>Name:</label><br>
+    <input name="name" required style="width:100%;"><br><br>
+    <label>Email:</label><br>
+    <input name="email" type="email" required style="width:100%;"><br><br>
+    <label>Message:</label><br>
+    <textarea name="message" required style="width:100%;height:80px;"></textarea><br><br>
+    <button type="submit">Submit</button>
+  `;
+
+  contactLog.parentElement.appendChild(form);
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    writeToContactLog("Sending...");
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: new FormData(form)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        writeToContactLog("✔ Message sent successfully!");
+      } else {
+        writeToContactLog("✖ Error sending message.");
+      }
+    })
+    .catch(() => {
+      writeToContactLog("✖ Error sending message.");
+    });
   });
 }
+
+/* Focus the terminal input on load */
+window.addEventListener("load", () => {
+  contactInput.focus();
+});
 
 /* ============================================================
    GUESTBOOK POPUP
    ============================================================ */
+const guestbookModal = document.getElementById("guestbook-modal");
+
 function openGuestbook() {
-  location.hash = "#guestbook";
-  document.getElementById("guestbook-modal").classList.add("show");
+  if (location.hash !== "#guestbook") {
+    location.hash = "#guestbook";
+  }
+  guestbookModal.classList.add("show");
 }
 
 function closeGuestbook() {
-  history.pushState("", document.title, window.location.pathname + window.location.search);
-  document.getElementById("guestbook-modal").classList.remove("show");
+  guestbookModal.classList.remove("show");
+  // remove hash without reloading
+  history.replaceState(null, "", window.location.pathname + window.location.search);
 }
 
+/* Open on initial load if URL already has #guestbook */
 if (location.hash === "#guestbook") {
   openGuestbook();
 }
