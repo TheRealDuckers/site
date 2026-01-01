@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your Name</title>
+
+<!-- Devicon CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+<style>
+/* ============================================================
+   THEATRE BACKGROUND + SPOTLIGHT CURSOR
+   ============================================================ */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  color: #eee;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05), rgba(0,0,0,0.9)),
+              linear-gradient(to bottom, #3a0d0d, #1a0000);
+  background-attachment: fixed;
+  --cursor-x: 50vw;
+  --cursor-y: 50vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 200px at var(--cursor-x) var(--cursor-y),
+    rgba(255,255,255,0.15),
+    transparent 70%
+  );
+  transition: background 0.1s ease;
+}
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+}
+
+/* ============================================================
+   DESKTOP CURTAINS
+   ============================================================ */
+@media (min-width: 900px) {
+  .curtain {
+    position: fixed;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to bottom, #4b0000, #1a0000);
+    z-index: 9999;
+    animation: openCurtains 2.5s ease forwards;
+  }
+  .curtain-left { left: 0; transform: translateX(0); }
+  .curtain-right { right: 0; transform: translateX(0); }
+
+  @keyframes openCurtains {
+    to { transform: translateX(-100%); }
+  }
+  .curtain-right {
+    animation: openCurtainsRight 2.5s ease forwards;
+  }
+  @keyframes openCurtainsRight {
+    to { transform: translateX(100%); }
+  }
+}
+
+/* ============================================================
+   RETRO WINDOW STYLE
+   ============================================================ */
+.window {
+  border: 2px dashed rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.1);
+  border-bottom: 2px dashed rgba(255,255,255,0.2);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+}
+
+.title-bar .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.red { background: #ff5f56; }
+.yellow { background: #ffbd2e; }
+.green { background: #27c93f; }
+
+.content {
+  padding: 1.5rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   TWO-COLUMN DESKTOP LAYOUT
+   ============================================================ */
+.columns {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+@media (min-width: 900px) {
+  .columns {
+    flex-direction: row;
+  }
+  .columns .window {
+    flex: 1;
+  }
+}
+
+/* ============================================================
+   TECH STACK GRID
+   ============================================================ */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px dashed rgba(255,255,255,0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* ============================================================
+   TERMINAL WINDOWS (AMBER)
+   ============================================================ */
+.terminal {
+  background: #000;
+  color: #ffbf47;
+  font-family: "JetBrains Mono", monospace;
+  padding: 1rem;
+  border-radius: 6px;
+  min-height: 200px;
+  white-space: pre-wrap;
+}
+
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background: #ffbf47;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ============================================================
+   GUESTBOOK POPUP
+   ============================================================ */
+#guestbook-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(0,0,0,0.9);
+  border: 2px dashed #fff;
+  padding: 1rem;
+  width: 90%;
+  max-width: 500px;
+  z-index: 10000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#guestbook-modal.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.close-btn {
+  cursor: pointer;
+  float: right;
+  font-size: 1.2rem;
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+a {
+  color: #ffbd2e;
+  text-decoration: none;
+  border-bottom: 1px dashed #ffbd2e;
+}
+a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Curtains (desktop only) -->
+<div class="curtain curtain-left"></div>
+<div class="curtain curtain-right"></div>
+
+<div class="bg-overlay"></div>
+
+<!-- ============================================================
+     TWO SIDE-BY-SIDE WINDOWS
+     ============================================================ -->
+<div class="columns">
+
+  <!-- Left window -->
+  <section class="window">
+    <div class="title-bar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span>/home/you</span>
+    </div>
+    <div class="content">
+      <h1>Your Name</h1>
+      <p>creative technologist • designer • theatre enjoyer</p>
+    </div>
+  </section>
+
+  <!-- Right window -->
+  <section class="window">
+    <div class="title-bar">
+      <span>about.txt</span>
+    </div>
+    <div class="content">
+      <p>Write a short bio here. Keep it punchy, weird, or poetic — whatever feels like you.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================
+     TECH STACK
+     ============================================================ -->
+<section class="window">
+  <div class="title-bar"><span>tech-stack.md</span></div>
+  <div class="content">
+    <div class="tech-grid">
+      <div class="tech-item"><i class="devicon-html5-plain colored"></i> HTML</div>
+      <div class="tech-item"><i class="devicon-css3-plain colored"></i> CSS</div>
+      <div class="tech-item"><i class="devicon-javascript-plain colored"></i> JavaScript</div>
+      <div class="tech-item"><i class="devicon-react-original colored"></i> React</div>
+      <div class="tech-item"><i class="devicon-nodejs-plain colored"></i> Node</div>
+      <div class="tech-item"><i class="devicon-python-plain colored"></i> Python</div>
+      <div class="tech-item"><i class="devicon-cplusplus-plain colored"></i> C++</div>
+      <div class="tech-item"><i class="devicon-git-plain colored"></i> Git</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROJECTS
+     ============================================================ -->
+<section class="window">
+  <div class="title-bar"><span>projects/</span></div>
+  <div class="content">
+    <ul>
+      <li><a href="#">Project One</a> — short description.</li>
+      <li><a href="#">Project Two</a> — short description.</li>
+      <li><a href="#">Project Three</a> — short description.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================
+     TERMINAL GITHUB SNAKE
+     ============================================================ -->
+<section class="window">
+  <div class="title-bar"><span>github-snake.terminal</span></div>
+  <div class="content">
+    <div id="snake-terminal" class="terminal"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TERMINAL CONTACT WINDOW
+     ============================================================ -->
+<section class="window">
+  <div class="title-bar"><span>contact.terminal</span></div>
+  <div class="content">
+    <div id="contact-terminal" class="terminal"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GUESTBOOK POPUP
+     ============================================================ -->
+<div id="guestbook-modal">
+  <span class="close-btn" onclick="closeGuestbook()">✖</span>
+  <h2>Guestbook</h2>
+  <p>Leave a message!</p>
+  <textarea style="width:100%;height:100px;"></textarea>
+  <button style="margin-top:1rem;">Submit</button>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* Spotlight cursor */
+document.addEventListener("mousemove", e => {
+  document.body.style.setProperty("--cursor-x", e.clientX + "px");
+  document.body.style.setProperty("--cursor-y", e.clientY + "px");
+});
+
+/* ============================================================
+   TERMINAL: GITHUB SNAKE
+   ============================================================ */
+const snakeTerm = document.getElementById("snake-terminal");
+snakeTerm.innerText = "> fetching GitHub activity...\n";
+setTimeout(() => {
+  snakeTerm.innerText += "> rendering snake...\n";
+}, 1000);
+setTimeout(() => {
+  snakeTerm.innerHTML += '<img src="https://raw.githubusercontent.com/Platane/snk/output/github-contribution-grid-snake.svg" style="width:100%;margin-top:1rem;">';
+}, 2000);
+
+/* ============================================================
+   TERMINAL: CONTACT
+   ============================================================ */
+const contactTerm = document.getElementById("contact-terminal");
+
+let contactOutput = 
+`amber-terminal v1.0
+------------------------------------
+> help
+Available commands:
+  contact email
+  contact slack
+  contact form
+  contact now
+  clear
+------------------------------------
+`;
+
+contactTerm.innerText = contactOutput;
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    handleCommand();
+  }
+});
+
+function handleCommand() {
+  const cmd = prompt("Enter command:");
+  if (!cmd) return;
+
+  if (cmd === "contact email") {
+    contactTerm.innerText += "\n> contact email\nyou@example.com\n";
+  }
+  else if (cmd === "contact slack") {
+    contactTerm.innerText += "\n> contact slack\nhttps://yourslackworkspace.slack.com\n";
+  }
+  else if (cmd === "contact now") {
+    contactTerm.innerText += "\n> contact now\nDialing...\n(+44) 1234 567890\n";
+  }
+  else if (cmd === "contact form") {
+    contactTerm.innerText += "\n> contact form\nOpening contact form...\n";
+
+    contactTerm.innerHTML += `
+      <form id="contactForm" style="margin-top:1rem;" onsubmit="submitForm(event)">
+        <input name="access_key" type="hidden" value="YOUR-WEB3FORMS-ACCESS-KEY-HERE">
+        <label>Name:</label><br>
+        <input name="name" required style="width:100%;"><br><br>
+        <label>Email:</label><br>
+        <input name="email" type="email" required style="width:100%;"><br><br>
+        <label>Message:</label><br>
+        <textarea name="message" required style="width:100%;height:80px;"></textarea><br><br>
+        <button type="submit">Submit</button>
+      </form>
+    `;
+  }
+  else if (cmd === "clear") {
+    contactTerm.innerText = contactOutput;
+  }
+  else {
+    contactTerm.innerText += `\n> ${cmd}\nUnknown command.\n`;
+  }
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  const form = e.target;
+  contactTerm.innerText += "\nSending...\n";
+
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: new FormData(form)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      contactTerm.innerText += "✔ Message sent successfully!\n";
+    } else {
+      contactTerm.innerText += "✖ Error sending message.\n";
+    }
+  });
+}
+
+/* ============================================================
+   GUESTBOOK POPUP
+   ============================================================ */
+function openGuestbook() {
+  location.hash = "#guestbook";
+  document.getElementById("guestbook-modal").classList.add("show");
+}
+
+function closeGuestbook() {
+  history.pushState("", document.title, window.location.pathname + window.location.search);
+  document.getElementById("guestbook-modal").classList.remove("show");
+}
+
+if (location.hash === "#guestbook") {
+  openGuestbook();
+}
+</script>
+
+</body>
+</html>
