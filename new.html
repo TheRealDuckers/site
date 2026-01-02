@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Your Name</title>
+<title>duckers</title>
 
 <!-- Devicon CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
@@ -30,10 +30,10 @@ body::before {
   pointer-events: none;
   background: radial-gradient(
     circle 200px at var(--cursor-x) var(--cursor-y),
-    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.18),
     transparent 70%
   );
-  transition: background 0.1s ease;
+  transition: background 0.08s ease;
 }
 
 .bg-overlay {
@@ -80,7 +80,7 @@ body::before {
   backdrop-filter: blur(6px);
   border-radius: 8px;
   overflow: hidden;
-  margin: 1.5rem 1rem;
+  margin: 1.5rem 1.25rem;
 }
 
 .title-bar {
@@ -159,17 +159,22 @@ body::before {
 }
 
 /* ============================================================
-   TERMINAL WINDOWS (AMBER)
+   TERMINAL WINDOWS (THEMED)
    ============================================================ */
 .terminal {
-  background: #000;
-  color: #ffbf47;
+  --term-bg: #000000;
+  --term-fg: #ffbf47;   /* amber */
+  --term-accent: #ffbf47;
+  --term-border: #ffbf47;
+  background: var(--term-bg);
+  color: var(--term-fg);
   font-family: "JetBrains Mono", monospace;
   padding: 1rem;
   border-radius: 6px;
   min-height: 200px;
   white-space: pre-wrap;
   font-size: 0.9rem;
+  border: 1px dashed var(--term-border);
 }
 
 .terminal-log {
@@ -192,8 +197,8 @@ body::before {
   flex: 1;
   background: transparent;
   border: none;
-  border-bottom: 1px dashed #ffbf47;
-  color: #ffbf47;
+  border-bottom: 1px dashed var(--term-accent);
+  color: var(--term-fg);
   font-family: inherit;
   font-size: inherit;
   outline: none;
@@ -203,7 +208,7 @@ body::before {
   display: inline-block;
   width: 8px;
   height: 1em;
-  background: #ffbf47;
+  background: var(--term-accent);
   margin-left: 2px;
   animation: blink 1s steps(1) infinite;
 }
@@ -280,10 +285,10 @@ a:hover {
       <span>/home/you</span>
     </div>
     <div class="content">
-      <h1>Your Name</h1>
-      <p>creative technologist • designer • theatre enjoyer</p>
-      <p style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
-        Try commands in the contact terminal below. Also: <a href="javascript:void(0)" onclick="openGuestbook()">open guestbook</a>.
+      <h1>Duckers</h1>
+      <p>frontend dev • server crasher • theatre enjoyer</p>
+      <p style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;">
+        To say hi, pop down to the terminal. Try: <code>help</code>, <code>contact email</code>, <code>theme green</code>, <code>guestbook</code>.
       </p>
     </div>
   </section>
@@ -294,7 +299,8 @@ a:hover {
       <span>about.txt</span>
     </div>
     <div class="content">
-      <p>Write a short bio here. Keep it punchy, weird, or poetic — whatever feels like you.</p>
+      <p>Hi <img src="https://emoji.slack-edge.com/T09V59WQY1E/doggo_wave/3cdf1abfd65d390a.gif" width="50" height="50"/>
+      I'm Duckers, a teenager web dev, problem solver and problem creator. I love theatre (hence the strange curtain thing this site does if you load it on a big enough screen) and coding, which some people say is a really strange combo, and you know what i say to that? Yes, it probably is. Anyway, i should probably keep this short otherwise my flexbox and grid layouts are not going to like me... <i>one last thing though - are you a lawyer? i need help. my cup of tea just filed a police report againt me - said it had been mugged!</i> </p>
     </div>
   </section>
 
@@ -377,6 +383,17 @@ a:hover {
      JAVASCRIPT
      ============================================================ -->
 <script>
+/* Prevent auto-scroll restore */
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+window.addEventListener("load", () => {
+  window.scrollTo(0, 0);
+  if (location.hash === "#guestbook") {
+    setTimeout(openGuestbook, 50);
+  }
+});
+
 /* Spotlight cursor */
 document.addEventListener("mousemove", e => {
   document.body.style.setProperty("--cursor-x", e.clientX + "px");
@@ -384,20 +401,42 @@ document.addEventListener("mousemove", e => {
 });
 
 /* ============================================================
+   SIMPLE TYPING EFFECT FOR SNAKE TERMINAL
+   ============================================================ */
+function typeLines(targetEl, lines, options = {}) {
+  const speed = options.speed || 40;
+  let i = 0;
+
+  function typeLine() {
+    if (i >= lines.length) return;
+    targetEl.textContent += lines[i] + "\n";
+    targetEl.scrollTop = targetEl.scrollHeight;
+    i++;
+    if (i < lines.length) {
+      setTimeout(typeLine, speed * 5);
+    }
+  }
+  typeLine();
+}
+
+/* ============================================================
    TERMINAL: GITHUB SNAKE
    ============================================================ */
 const snakeLog = document.getElementById("snake-log");
-snakeLog.textContent = "> fetching GitHub activity...\n";
-setTimeout(() => {
-  snakeLog.textContent += "> rendering snake...\n";
-}, 900);
+snakeLog.textContent = "";
+typeLines(snakeLog, [
+  "> fetching GitHub activity...",
+  "> rendering snake..."
+], { speed: 40 });
+
 setTimeout(() => {
   snakeLog.innerHTML += '<img src="https://raw.githubusercontent.com/Platane/snk/output/github-contribution-grid-snake.svg" style="width:100%;margin-top:1rem;" alt="GitHub snake">';
-}, 1800);
+}, 1600);
 
 /* ============================================================
-   TERMINAL: CONTACT
+   TERMINAL: CONTACT (with modes + themes + simple autocomplete)
    ============================================================ */
+const contactTerminal = document.getElementById("contact-terminal");
 const contactLog = document.getElementById("contact-log");
 const contactInput = document.getElementById("contact-input");
 
@@ -410,32 +449,71 @@ Type 'help' to see available commands.
 
 contactLog.textContent = introText;
 
+/* Themes */
+const themes = {
+  amber:  { fg: "#ffbf47", accent: "#ffbf47", border: "#ffbf47" },
+  green:  { fg: "#7CFC00", accent: "#7CFC00", border: "#7CFC00" },
+  grey:   { fg: "#d0d0d0", accent: "#d0d0d0", border: "#d0d0d0" }
+};
+let currentTheme = "amber";
+
+function applyTheme(name) {
+  const t = themes[name] || themes.amber;
+  currentTheme = name in themes ? name : "amber";
+  contactTerminal.style.setProperty("--term-fg", t.fg);
+  contactTerminal.style.setProperty("--term-accent", t.accent);
+  contactTerminal.style.setProperty("--term-border", t.border);
+}
+
+/* initial theme */
+applyTheme("amber");
+
+/* Command list for autocomplete/help */
+const commandList = [
+  "help",
+  "contact email",
+  "contact slack",
+  "contact form",
+  "contact now",
+  "guestbook",
+  "clear",
+  "theme amber",
+  "theme green",
+  "theme grey"
+];
+
 const helpText =
 `Available commands:
+  help
   contact email
   contact slack
   contact form
   contact now
   guestbook
   clear
+  theme amber
+  theme green
+  theme grey
 `;
 
+/* history */
+const historyList = [];
+let historyIndex = -1;
+
+/* terminal mode: 'command', 'form-name', 'form-email', 'form-message', 'form-confirm' */
+let termMode = "command";
+let formState = null; // { name, email, message }
+
+/* helpers */
 function writeToContactLog(text) {
   contactLog.textContent += text + "\n";
   contactLog.scrollTop = contactLog.scrollHeight;
 }
 
-contactInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const cmd = contactInput.value.trim();
-    if (!cmd) return;
-    handleContactCommand(cmd);
-    contactInput.value = "";
-  }
-});
-
-function handleContactCommand(cmd) {
+/* core command handler */
+function handleCommandMode(cmd) {
+  historyList.push(cmd);
+  historyIndex = historyList.length;
   writeToContactLog("> " + cmd);
 
   if (cmd === "help") {
@@ -448,75 +526,143 @@ function handleContactCommand(cmd) {
     writeToContactLog("Dialing...");
     writeToContactLog("(+44) 1234 567890");
   } else if (cmd === "contact form") {
-    showContactForm();
+    startContactFormFlow();
   } else if (cmd === "guestbook") {
     writeToContactLog("Opening guestbook...");
     openGuestbook();
   } else if (cmd === "clear") {
     contactLog.textContent = introText;
+  } else if (cmd.startsWith("theme ")) {
+    const themeName = cmd.split(" ")[1];
+    if (themes[themeName]) {
+      applyTheme(themeName);
+      writeToContactLog(`Theme set to ${themeName}.`);
+    } else {
+      writeToContactLog("Unknown theme. Try: theme amber | theme green | theme grey");
+    }
   } else {
     writeToContactLog("Unknown command. Type 'help' for options.");
   }
 }
 
-/* Inject Web3Forms form */
-function showContactForm() {
-  writeToContactLog("Opening contact form...");
-  const formHtml = `
-------------------------------------
-Name:
-Email:
-Message:
-[ Submit ]
-------------------------------------
-  `;
-  writeToContactLog(formHtml);
+/* contact form flow (no underscores, step-by-step) */
+function startContactFormFlow() {
+  formState = { name: "", email: "", message: "" };
+  termMode = "form-name";
+  writeToContactLog("Starting contact form...");
+  writeToContactLog("Enter your name:");
+}
 
-  // Create actual form element below the log
-  const existingForm = document.getElementById("contactForm");
-  if (existingForm) existingForm.remove();
+function handleFormInput(value) {
+  if (!formState) return;
 
-  const form = document.createElement("form");
-  form.id = "contactForm";
-  form.style.marginTop = "0.5rem";
+  if (termMode === "form-name") {
+    formState.name = value;
+    writeToContactLog(`Name: ${value}`);
+    termMode = "form-email";
+    writeToContactLog("Enter your email:");
+  } else if (termMode === "form-email") {
+    formState.email = value;
+    writeToContactLog(`Email: ${value}`);
+    termMode = "form-message";
+    writeToContactLog("Enter your message (single line):");
+  } else if (termMode === "form-message") {
+    formState.message = value;
+    writeToContactLog(`Message: ${value}`);
+    termMode = "form-confirm";
+    writeToContactLog("Send message? (Y/N)");
+  } else if (termMode === "form-confirm") {
+    const answer = value.trim().toLowerCase();
+    if (answer === "y" || answer === "yes") {
+      sendFormState();
+    } else {
+      writeToContactLog("Cancelled. Message not sent.");
+      formState = null;
+      termMode = "command";
+    }
+  }
+}
 
-  form.innerHTML = `
-    <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY-HERE">
-    <label>Name:</label><br>
-    <input name="name" required style="width:100%;"><br><br>
-    <label>Email:</label><br>
-    <input name="email" type="email" required style="width:100%;"><br><br>
-    <label>Message:</label><br>
-    <textarea name="message" required style="width:100%;height:80px;"></textarea><br><br>
-    <button type="submit">Submit</button>
-  `;
+function sendFormState() {
+  writeToContactLog("Sending...");
+  const formData = new FormData();
+  formData.append("access_key", "YOUR-WEB3FORMS-ACCESS-KEY-HERE");
+  formData.append("name", formState.name);
+  formData.append("email", formState.email);
+  formData.append("message", formState.message);
 
-  contactLog.parentElement.appendChild(form);
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    writeToContactLog("Sending...");
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: new FormData(form)
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        writeToContactLog("✔ Message sent successfully!");
-      } else {
-        writeToContactLog("✖ Error sending message.");
-      }
-    })
-    .catch(() => {
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      writeToContactLog("✔ Message sent successfully!");
+    } else {
       writeToContactLog("✖ Error sending message.");
-    });
+    }
+    formState = null;
+    termMode = "command";
+  })
+  .catch(() => {
+    writeToContactLog("✖ Error sending message.");
+    formState = null;
+    termMode = "command";
   });
 }
 
-/* Focus the terminal input on load */
-window.addEventListener("load", () => {
-  contactInput.focus();
+/* autocomplete state */
+let lastTabTime = 0;
+
+/* terminal input handlers */
+contactInput.addEventListener("keydown", e => {
+  const value = contactInput.value;
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const cmd = value.trim();
+    contactInput.value = "";
+
+    if (!cmd) return;
+
+    if (termMode === "command") {
+      handleCommandMode(cmd);
+    } else {
+      /* in form mode: don't treat as command, treat as answer */
+      writeToContactLog("> " + cmd);
+      handleFormInput(cmd);
+    }
+  } else if (termMode === "command" && e.key === "ArrowUp") {
+    e.preventDefault();
+    if (historyList.length === 0) return;
+    historyIndex = Math.max(0, historyIndex - 1);
+    contactInput.value = historyList[historyIndex] || "";
+  } else if (termMode === "command" && e.key === "ArrowDown") {
+    e.preventDefault();
+    if (historyList.length === 0) return;
+    historyIndex = Math.min(historyList.length, historyIndex + 1);
+    if (historyIndex === historyList.length) {
+      contactInput.value = "";
+    } else {
+      contactInput.value = historyList[historyIndex] || "";
+    }
+  } else if (termMode === "command" && e.key === "Tab") {
+    e.preventDefault();
+    const now = Date.now();
+    const prefix = value.trim();
+    if (!prefix) return;
+
+    const matches = commandList.filter(c => c.startsWith(prefix));
+    if (matches.length === 1) {
+      contactInput.value = matches[0];
+    } else if (matches.length > 1) {
+      if (now - lastTabTime < 400) {
+        writeToContactLog(matches.join("\n"));
+      }
+      lastTabTime = now;
+    }
+  }
 });
 
 /* ============================================================
@@ -533,14 +679,16 @@ function openGuestbook() {
 
 function closeGuestbook() {
   guestbookModal.classList.remove("show");
-  // remove hash without reloading
   history.replaceState(null, "", window.location.pathname + window.location.search);
 }
 
-/* Open on initial load if URL already has #guestbook */
-if (location.hash === "#guestbook") {
-  openGuestbook();
-}
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    contactInput.focus({ preventScroll: true });
+  }, 50);
+});
+
+
 </script>
 
 </body>
