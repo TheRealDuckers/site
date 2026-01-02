@@ -260,6 +260,23 @@ a:hover {
   color: #fff;
   border-bottom-color: #fff;
 }
+
+   .project-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.project-thumb {
+  width: 80px;
+  height: 80px;
+  border: 1px dashed rgba(255,255,255,0.4);
+  border-radius: 6px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.05);
+}
+
 </style>
 </head>
 
@@ -333,11 +350,30 @@ a:hover {
 <section class="window">
   <div class="title-bar"><span>projects/</span></div>
   <div class="content">
-    <ul>
-      <li><a href="https://github.com/TheRealDuckers/WebCue">WebCue</a> — QLAB in a browser.</li>
-      <li><a href="https://github.com/TheRealDuckers/LyricShow">LyricShow</a> — it shows lyrics...</li>
-      <li><a href="https://github.com/TheRealDuckers/the-hackers">The Hackers</a> — like The Traitors, but with code.</li>
-    </ul>
+    <div class="project-item">
+  <img class="project-thumb" src="thumbs/webcue.png" alt="WebCue screenshot">
+  <div>
+    <a href="#">WebCue</a><br>
+    <span style="font-size:0.85rem;opacity:0.8;">QLab, but in a browser.</span>
+  </div>
+</div>
+
+<div class="project-item">
+  <img class="project-thumb" src="thumbs/lyricshow.jpeg" alt="LyricShow screenshot">
+  <div>
+    <a href="#">LyricShow</a><br>
+    <span style="font-size:0.85rem;opacity:0.8;">It shows lyrics</span>
+  </div>
+</div>
+
+<div class="project-item">
+  <img class="project-thumb" src="thumbs/hackers.jpg" alt="hackers logo">
+  <div>
+    <a href="#">The Hackers</a><br>
+    <span style="font-size:0.85rem;opacity:0.8;">Like the traitors, but with code.</span>
+  </div>
+</div>
+
   </div>
 </section>
 
