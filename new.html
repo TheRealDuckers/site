@@ -535,12 +535,13 @@ function handleCommandMode(cmd) {
   if (cmd === "help") {
     writeToContactLog(helpText);
   } else if (cmd === "contact email") {
-    writeToContactLog("you@example.com");
+    writeToContactLog("my email; [WOULDN'T YOU LIKE TO KNOW] (do contact form instead)");
   } else if (cmd === "contact slack") {
-    writeToContactLog("https://yourslackworkspace.slack.com");
+    writeToContactLog("https://hackclub.enterprise.slack.com/archives/D09F00GLVHB");
   } else if (cmd === "contact now") {
     writeToContactLog("Dialing...");
     writeToContactLog("(+44) 1234 567890");
+    writeToContactLog("I am kidding, this doesn't actually work. try doing contact form");
   } else if (cmd === "contact form") {
     startContactFormFlow();
   } else if (cmd === "guestbook") {
@@ -602,7 +603,7 @@ function handleFormInput(value) {
 function sendFormState() {
   writeToContactLog("Sending...");
   const formData = new FormData();
-  formData.append("access_key", "YOUR-WEB3FORMS-ACCESS-KEY-HERE");
+  formData.append("access_key", "ec99dac2-fd12-4669-83ec-9ff3ef48c519");
   formData.append("name", formState.name);
   formData.append("email", formState.email);
   formData.append("message", formState.message);
