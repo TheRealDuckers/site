@@ -305,7 +305,7 @@ a:hover {
       <h1>Duckers</h1>
       <p>frontend dev • server crasher • theatre enjoyer</p>
       <p style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;">
-        To say hi, pop down to the terminal. Try: <code>help</code>, <code>contact email</code>, <code>theme green</code>, <code>guestbook</code>.
+        To say hi, pop down to the terminal. Try: <code>help</code>, <code>contact form</code>, <code>theme green</code>, <code>guestbook</code>.
       </p>
        <p>If you enjoyed you visit, why not leave a message in the <a onclick="openGuestbook()">guestbook</a>? if you didn't enjoy your stay, click  <a onclick="window.location='https://hc-cdn.hel1.your-objectstorage.com/s/v3/575e6cd9fc079117a34b97cd93b671f92dbe06c6_get-dinoed.mp4'">here.</a></p>
     </div>
@@ -573,9 +573,8 @@ function handleCommandMode(cmd) {
   } else if (cmd === "contact slack") {
     writeToContactLog("https://hackclub.enterprise.slack.com/archives/D09F00GLVHB");
   } else if (cmd === "contact now") {
-    writeToContactLog("Dialing...");
-    writeToContactLog("(+44) 1234 567890");
-    writeToContactLog("I am kidding, this doesn't actually work. try doing contact form");
+    openGuestbook();
+    startContactFormFlow();
   } else if (cmd === "contact form") {
     startContactFormFlow();
   } else if (cmd === "guestbook") {
