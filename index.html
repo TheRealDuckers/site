@@ -1,765 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>duckers</title>
+  <meta charset="utf-8" />
+  <title>Duck Pond</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#e9fdf3;
+      --accent:#b6d8c0;
+      --accent-dark:#9fcbb0;
+      --muted:#f7fff9;
+      --text:#2f4f3e;
+      --title:#3a6f55;
+      --link:#5aa87a;
+    }
 
-<!-- Devicon CDN -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    html,body{height:100%;margin:0}
+    body{
+      background:var(--bg);
+      font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      overflow-x:hidden;
+      padding:1.5rem;
+      box-sizing:border-box;
+    }
 
-<style>
-/* ============================================================
-   THEATRE BACKGROUND + SPOTLIGHT CURSOR
-   ============================================================ */
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  color: #eee;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.05), rgba(0,0,0,0.9)),
-              linear-gradient(to bottom, #3a0d0d, #1a0000);
-  background-attachment: fixed;
-  --cursor-x: 50vw;
-  --cursor-y: 50vh;
+    /* decorative background */
+    .duck-bg{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      z-index:0;
+      opacity:.18;
+    }
+    .duck-bg svg{width:420px;height:420px;display:block}
+
+    /* Title (starts centered) */
+    #title{
+      font-size:4rem;
+      font-weight:700;
+      color:var(--title);
+      margin-top:30vh;                 /* centered-ish start */
+      transition:margin 0.6s cubic-bezier(.22,.9,.3,1), transform 0.18s ease-out;
+      z-index:2;
+      text-align:center;
+      pointer-events:none;
+      will-change:transform,margin;
+    }
+
+    /* When title is pinned to top */
+    .title-top{
+      margin-top:1.5rem !important;
+    }
+
+    /* Links */
+    .links{
+      margin-top:1rem;
+      z-index:2;
+      display:flex;
+      gap:.5rem;
+    }
+    .links a{
+      background:#dff7e8;
+      color:var(--link);
+      text-decoration:none;
+      padding:.45rem .9rem;
+      border-radius:0 0 12px 12px;
+      border-bottom:3px solid var(--accent);
+      font-weight:600;
+      cursor:pointer;
+      user-select:none;
+    }
+    .links a:hover{background:#c8f0d8;border-bottom-color:var(--accent-dark)}
+
+    /* Content area (fades under the title) */
+    #content{
+      width:100%;
+      max-width:900px;
+      margin-top:2.5rem;
+      z-index:2;
+      opacity:0;                       /* start hidden */
+      transition:opacity 250ms ease;
+      box-sizing:border-box;
+      min-height: 120px;               /* reserve space so layout doesn't jump */
+    }
+    #content.visible{opacity:1}
+    #content.hidden{opacity:0}
+
+    .section-title{font-size:2rem;color:var(--title);text-align:center;margin-bottom:1rem}
+
+    /* Cards and boxes with thick offset borders */
+    .projects-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1.25rem;
+    }
+
+    .project-card{
+      background:var(--muted);
+      border:4px solid var(--accent);
+      border-radius:14px;
+      padding:1rem;
+      box-shadow:6px 6px 0 var(--accent-dark);
+      text-align:center;
+    }
+    .project-card-img{
+      width:100%;
+      height:160px;
+      object-fit:cover;
+      border-radius:10px;
+      margin-bottom:.6rem;
+    }
+    .project-card:hover{transform:translateY(-4px);transition:transform .15s ease}
+
+    .about-box{
+      background:var(--muted);
+      border:4px solid var(--accent);
+      border-radius:14px;
+      padding:1.6rem;
+      display:flex;
+      gap:1.25rem;
+      align-items:center;
+      box-shadow:8px 8px 0 var(--accent-dark);
+      flex-wrap:wrap;
+    }
+    .about-box img{
+      width:180px;height:180px;object-fit:cover;border-radius:12px;border:4px solid var(--accent);
+    }
+
+    .contact-line{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:var(--muted);
+      border:4px solid var(--accent);
+      padding:1rem 1.25rem;
+      border-radius:12px;
+      margin-bottom:1rem;
+      box-shadow:6px 6px 0 var(--accent-dark);
+      font-size:1.05rem;
+    }
+
+    .copy-btn{
+      cursor:pointer;
+      font-weight:700;
+      color:var(--link);
+      font-size:1.25rem;
+      user-select:none;
+      transition:transform .12s ease,color .12s ease;
+    }
+    .copy-btn:active{transform:scale(.96)}
+
+    /* small responsive tweaks */
+    @media (max-width:520px){
+      #title{font-size:2.4rem;margin-top:10vh}
+      .about-box{padding:1rem}
+      .about-box img{width:120px;height:120px}
+    }
+/* Inline text link with dashed underline and subtle hover effect */
+.text-link {
+  color: #3a6f55;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(58,111,85,0.45);
+  padding-bottom: 2px;
+  transition: color 180ms ease, border-color 180ms ease, transform 120ms ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle 200px at var(--cursor-x) var(--cursor-y),
-    rgba(255,255,255,0.18),
-    transparent 70%
-  );
-  transition: background 0.08s ease;
+.text-link:hover,
+.text-link:focus {
+  color: #2a5a43;
+  border-bottom-color: rgba(42,90,67,0.95);
+  transform: translateY(-1px);
 }
 
-.bg-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+.text-link:active {
+  transform: translateY(0);
 }
 
-/* ============================================================
-   DESKTOP CURTAINS
-   ============================================================ */
-@media (min-width: 900px) {
-  .curtain {
-    position: fixed;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to bottom, #4b0000, #1a0000);
-    z-index: 9999;
-  }
-  .curtain-left {
-    left: 0;
-    animation: openCurtainsLeft 2.5s ease forwards;
-  }
-  .curtain-right {
-    right: 0;
-    animation: openCurtainsRight 2.5s ease forwards;
-  }
-  @keyframes openCurtainsLeft {
-    to { transform: translateX(-100%); }
-  }
-  @keyframes openCurtainsRight {
-    to { transform: translateX(100%); }
-  }
+.text-link:focus {
+  outline: 3px solid rgba(90,168,122,0.12);
+  outline-offset: 3px;
 }
-
-/* ============================================================
-   RETRO WINDOW STYLE
-   ============================================================ */
-.window {
-  border: 2px dashed rgba(255,255,255,0.3);
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(6px);
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 1.5rem 1.25rem;
-}
-
-.title-bar {
+/* Long horizontal card (like project-card but wider) */
+.long-card {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0.5rem 1rem;
-  background: rgba(255,255,255,0.1);
-  border-bottom: 2px dashed rgba(255,255,255,0.2);
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.9rem;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 50px;
+  background: var(--muted);
+  border: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: 8px 8px 0 var(--accent-dark);
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-top: 20px;
 }
 
-.title-bar .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+/* Left media area (image / thumbnail) */
+.long-card .media {
+  flex: 0 0 360px;
+  height: 180px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 4px solid var(--accent);
+  background-size: cover;
+  background-position: center;
 }
 
-.red { background: #ff5f56; }
-.yellow { background: #ffbd2e; }
-.green { background: #27c93f; }
-
-.content {
-  padding: 1.5rem;
-  line-height: 1.6;
-}
-
-/* more breathing room on desktop */
-@media (min-width: 900px) {
-  .window {
-    margin-left: 3rem;
-    margin-right: 3rem;
-  }
-}
-
-/* ============================================================
-   TWO-COLUMN DESKTOP LAYOUT
-   ============================================================ */
-.columns {
+/* Content area */
+.long-card .body {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  margin: 2rem auto;
-  max-width: 1200px;
-}
-
-@media (min-width: 900px) {
-  .columns {
-    flex-direction: row;
-  }
-  .columns .window {
-    flex: 1;
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
-/* ============================================================
-   TECH STACK GRID
-   ============================================================ */
-.tech-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.tech-item {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  border: 1px dashed rgba(255,255,255,0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-family: "JetBrains Mono", monospace;
 }
 
-/* ============================================================
-   TERMINAL WINDOWS (THEMED)
-   ============================================================ */
-.terminal {
-  --term-bg: #000000;
-  --term-fg: #ffbf47;   /* amber */
-  --term-accent: #ffbf47;
-  --term-border: #ffbf47;
-  background: var(--term-bg);
-  color: var(--term-fg);
-  font-family: "JetBrains Mono", monospace;
-  padding: 1rem;
-  border-radius: 6px;
-  min-height: 200px;
-  white-space: pre-wrap;
-  font-size: 0.9rem;
-  border: 1px dashed var(--term-border);
+/* Title and excerpt */
+.long-card .title {
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--title);
+  line-height: 1.1;
 }
 
-.terminal-log {
-  max-height: 350px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+.long-card .excerpt {
+  margin: 0;
+  color: var(--text);
+  opacity: 0.95;
 }
 
-.terminal-input-row {
+/* Optional actions area (right side) */
+.long-card .actions {
+  flex: 0 0 auto;
   display: flex;
+  gap: 0.5rem;
   align-items: center;
-  margin-top: 0.5rem;
 }
 
-.terminal-prompt {
-  margin-right: 0.4rem;
+/* Responsive: stack on small screens */
+@media (max-width: 700px) {
+  .long-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.9rem;
+    min-height: auto;
+  }
+  .long-card .media {
+    width: 100%;
+    height: 160px;
+    flex: 0 0 auto;
+  }
+  .long-card .title { font-size: 1.25rem; }
 }
-
-.terminal-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  border-bottom: 1px dashed var(--term-accent);
-  color: var(--term-fg);
-  font-family: inherit;
-  font-size: inherit;
-  outline: none;
-}
-
-.cursor {
-  display: inline-block;
-  width: 8px;
-  height: 1em;
-  background: var(--term-accent);
-  margin-left: 2px;
-  animation: blink 1s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* ============================================================
-   GUESTBOOK POPUP
-   ============================================================ */
-#guestbook-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  background: rgba(0,0,0,0.95);
-  border: 2px dashed #fff;
-  padding: 1rem 1.25rem 1.25rem;
-  width: 90%;
-  max-width: 500px;
-  z-index: 10000;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-#guestbook-modal.show {
-  display: block;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.close-btn {
-  cursor: pointer;
-  float: right;
-  font-size: 1.2rem;
-}
-
-/* ============================================================
-   LINKS
-   ============================================================ */
-a {
-  color: #ffbd2e;
-  text-decoration: none;
-  border-bottom: 1px dashed #ffbd2e;
-}
-a:hover {
-  color: #fff;
-  border-bottom-color: #fff;
-}
-
-   .project-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
-}
-
-.project-thumb {
-  width: 80px;
-  height: 80px;
-  border: 1px dashed rgba(255,255,255,0.4);
-  border-radius: 6px;
-  object-fit: cover;
-  background: rgba(255,255,255,0.05);
-}
-
-</style>
+.long-card:hover{transform:translateY(-4px);transition:transform .15s ease}
+  </style>
 </head>
-
 <body>
-
-<!-- Curtains (desktop only) -->
-<div class="curtain curtain-left"></div>
-<div class="curtain curtain-right"></div>
-
-<div class="bg-overlay"></div>
-
-<!-- ============================================================
-     TWO SIDE-BY-SIDE WINDOWS
-     ============================================================ -->
-<div class="columns">
-
-  <!-- Left window -->
-  <section class="window">
-    <div class="title-bar">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
-      <span>/home/you</span>
-    </div>
-    <div class="content">
-      <h1>Duckers</h1>
-      <p>frontend dev • server crasher • theatre enjoyer</p>
-      <p><a href="https://github.com/TheRealDuckers">Github</a></p>
-       <p>If you enjoyed you visit, why not leave a message in the <a onclick="openGuestbook()">guestbook</a>? if you didn't enjoy your stay, click  <a onclick="window.location='https://hc-cdn.hel1.your-objectstorage.com/s/v3/575e6cd9fc079117a34b97cd93b671f92dbe06c6_get-dinoed.mp4'">here.</a></p>
-    </div>
-  </section>
-
-  <!-- Right window -->
-  <section class="window">
-    <div class="title-bar">
-      <span>about.txt</span>
-    </div>
-    <div class="content">
-      <p>Hi <img src="https://emoji.slack-edge.com/T09V59WQY1E/doggo_wave/3cdf1abfd65d390a.gif" width="20" height="20"/>
-      I'm Duckers, a teenager web dev, problem solver and problem creator. <br> I love theatre (hence the strange curtain thing this site does if you load it on a big enough screen) and coding, which some people say is a really strange combo, and you know what i say to that? Yes, it probably is. Anyway, i should probably keep this short otherwise my flexbox and grid layouts are not going to like me... <i>one last thing though - are you a lawyer? i need help. my cup of tea just filed a police report againt me - said it had been mugged!</i> </p>
-    </div>
-  </section>
-
-</div>
-
-<!-- ============================================================
-     TECH STACK
-     ============================================================ -->
-<section class="window">
-  <div class="title-bar"><span>tech-stack.md</span></div>
-  <div class="content">
-    <div class="tech-grid">
-      <div class="tech-item"><i class="devicon-html5-plain colored"></i> HTML</div>
-      <div class="tech-item"><i class="devicon-css3-plain colored"></i> CSS</div>
-      <div class="tech-item"><i class="devicon-javascript-plain colored"></i> JavaScript</div>
-      <div class="tech-item"><i class="devicon-nodejs-plain colored"></i> Node</div>
-      <div class="tech-item"><i class="devicon-python-plain colored"></i> Python</div>
-      <div class="tech-item"><i class="devicon-git-plain colored"></i> Git</div>
-      <div class="tech-item"><i class="devicon-java-plain"></i> Tea </div>
-    </div>
+  <div class="duck-bg" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+      <path fill="#dff7e8" d="M150 80c-10 0-18-8-18-18 0-7 4-13 10-16-6-10-18-17-32-17-20 0-36 14-36 32 0 3 0 6 1 9-28 2-50 20-50 43 0 24 25 44 56 44h44c31 0 56-20 56-44 0-18-14-33-31-39z"/>
+    </svg>
   </div>
-</section>
 
-<!-- ============================================================
-     PROJECTS
-     ============================================================ -->
-<section class="window">
-  <div class="title-bar"><span>projects/</span></div>
-  <div class="content">
-    <div class="project-item">
-  <img class="project-thumb" src="thumbs/webcue.png" alt="WebCue screenshot">
-  <div>
-    <a href="https://github.com/TheRealDuckers/WebCue">WebCue</a><br>
-    <span style="font-size:0.85rem;opacity:0.8;">QLab, but in a browser.</span>
-     <br>
-     <i class="devicon-html5-plain colored"></i>
-      <i class="devicon-css3-plain colored"></i>
-    <i class="devicon-javascript-plain colored"></i>
-  </div>
-</div>
+  <h1 id="title">Hi, I'm Duckers!</h1>
 
-<div class="project-item">
-  <img class="project-thumb" src="thumbs/lyricshow.jpeg" alt="LyricShow screenshot">
-  <div>
-    <a href="https://github.com/TheRealDuckers/LyricShow">LyricShow</a><br>
-    <span style="font-size:0.85rem;opacity:0.8;">It shows lyrics (funnily enough)</span>
-     <br>
-     <i class="devicon-html5-plain colored"></i>
-      <i class="devicon-css3-plain colored"></i>
-      <i class="devicon-javascript-plain colored"></i>
-  </div>
-</div>
+  <nav class="links" aria-label="Sections">
+    <a data-section="projects">Projects</a>
+    <a data-section="about">About Me</a>
+    <a href="https://blog.duckers.dev" target="_blank">Blog</a>
+    <a data-section="contact">Talk to Me</a>
+  </nav>
 
-<div class="project-item">
-  <img class="project-thumb" src="thumbs/hackers.jpg" alt="hackers logo">
-  <div>
-    <a href="https://github.com/TheRealDuckers/the-hackers">The Hackers</a><br>
-    <span style="font-size:0.85rem;opacity:0.8;">Like the traitors, but with code.</span>
-     <br>
-     <i class="devicon-html5-plain colored"></i>
-      <i class="devicon-css3-plain colored"></i>
-     <i class="devicon-javascript-plain colored"></i>
-      <i class="devicon-nodejs-plain colored"></i>
-     <i class="devicon-git-plain colored"></i>
-  </div>
-</div>
+  <main id="content" aria-live="polite"></main>
 
-  </div>
-</section>
+  <script>
+    (function(){
+      const title = document.getElementById('title');
+      const content = document.getElementById('content');
+      const buttons = document.querySelectorAll('[data-section]');
 
-<!-- ============================================================
-     TERMINAL GITHUB SNAKE
-     ============================================================ -->
-<section class="window">
-  <div class="title-bar"><span>github-snake.terminal</span></div>
-  <div class="content">
-    <div id="snake-terminal" class="terminal">
-      <div id="snake-log" class="terminal-log"></div>
-    </div>
-  </div>
-</section>
+      let currentSection = null;
+      let isAnimating = false;
+      let firstOpen = true;
 
-<!-- ============================================================
-     TERMINAL CONTACT WINDOW
-     ============================================================ -->
-<section class="window">
-  <div class="title-bar"><span>contact.terminal</span></div>
-  <div class="content">
-    <div id="contact-terminal" class="terminal">
-      <div id="contact-log" class="terminal-log"></div>
-      <div class="terminal-input-row">
-        <span class="terminal-prompt">&gt;</span>
-        <input id="contact-input" class="terminal-input" autocomplete="off" />
-        <span class="cursor"></span>
-      </div>
-    </div>
-  </div>
-</section>
+      const templates = {
+        projects: `
+          <div class="section-title">Projects</div>
+          <div class="projects-grid">
+            <div class="project-card">
+              
+              <h3>WebCue</h3>
+              <p>Basically QLab for the web.</p>
+            </div>
+            <div class="project-card">
+              
+              <h3>HackTab</h3>
+              <p>A cool new tab for Hack Clubbers.</p>
+            </div>
+            <div class="project-card">
+              
+              <h3>[COMING SOON] HackClub Mobile</h3>
+              <p>A web app for all things Hack Club!</p>
+            </div>
+          </div>
+          <div class="long-card">
+              <p>You can also check out my <s>dumping ground</s> GitHub <a class="text-link" href="https://github.com/TheRealDuckers"> here.</a></p>
+            </div>
+          </div>
+        `,
+        about: `
+          <div class="section-title">About Me</div>
+          <div class="about-box">
+            
+            <div>
+              <p>Hi there, hello,  i'm known around these parts as duckers! I love making stuff, mostly web-based - especially things that are fun or make someones life easier! </p>
+               <p>I tend to work with pure CSS, JS and HTML, but I also use TailWind, Python (Flask), Node.js and tea. </p>
+              <br>
+              <p>Outside of grinding GitHub (its that a thing!?), I enjoy performing, singing and scouting. I am also a <a class="text-link" href="https://en.wikipedia.org/wiki/Stage_lighting#:~:text=Stage%20lighting%20is%20the%20craft%20of%20lighting%20as%20it%20applies%20to%20the%20production%20of%20theater%2C%20dance%2C%20opera%2C%20and%20other%20performance%20arts.%5B1%5D" target="_blank"> theatre technician</a>, and frequently <s>blow stuff up</s> make cool special effects.
+            </div>
+          </div>
+        `,
+        contact: `
+          <div class="section-title">Talk to Me</div>
+          <div class="contact-line">
+            Email: quack@duckers.dev
+            <span class="copy-btn" data-copy="quack@duckers.dev" title="Copy email">⧉</span>
+          </div>
+          <div class="contact-line">
+            Slack (Hack Club): @Duckers
+            <a style="text-decoration: none;" href="https://hackclub.slack.com/team/U09F00G8605" target="_blank"> <span class="copy-btn" title="Sidle over to Slack">↗</span></a>
+          </div>
+          <div class="contact-line">
+            GitHub: github.com/duckdev
+           <a style="text-decoration: none;" href="https://github.com/TheRealDuckers" target="_blank"> <span class="copy-btn" title="Go to GitHub">↗</span></a>
+          </div>
+        `
+      };
 
-<!-- ============================================================
-     GUESTBOOK POPUP
-     ============================================================ -->
-<div id="guestbook-modal">
-  <span class="close-btn" onclick="closeGuestbook()">✖</span>
-  <h2>Guestbook</h2>
-  <p>Leave a message!</p>
-  <script src="https://giscus.app/client.js"
-        data-repo="TheRealDuckers/site"
-        data-repo-id="R_kgDOQom_YQ"
-        data-category-id="[ENTER CATEGORY ID HERE]"
-        data-mapping="specific"
-        data-term="Guest Book"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="gruvbox"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
-</div>
-
-<!-- ============================================================
-     JAVASCRIPT
-     ============================================================ -->
-<script>
-/* Prevent auto-scroll restore */
-if ("scrollRestoration" in history) {
-  history.scrollRestoration = "manual";
-}
-window.addEventListener("load", () => {
-  window.scrollTo(0, 0);
-  if (location.hash === "#guestbook") {
-    setTimeout(openGuestbook, 50);
-  }
-});
-
-/* Spotlight cursor */
-document.addEventListener("mousemove", e => {
-  document.body.style.setProperty("--cursor-x", e.clientX + "px");
-  document.body.style.setProperty("--cursor-y", e.clientY + "px");
-});
-
-/* ============================================================
-   SIMPLE TYPING EFFECT FOR SNAKE TERMINAL
-   ============================================================ */
-function typeLines(targetEl, lines, options = {}) {
-  const speed = options.speed || 40;
-  let i = 0;
-
-  function typeLine() {
-    if (i >= lines.length) return;
-    targetEl.textContent += lines[i] + "\n";
-    targetEl.scrollTop = targetEl.scrollHeight;
-    i++;
-    if (i < lines.length) {
-      setTimeout(typeLine, speed * 5);
-    }
-  }
-  typeLine();
-}
-
-/* ============================================================
-   TERMINAL: GITHUB SNAKE
-   ============================================================ */
-const snakeLog = document.getElementById("snake-log");
-snakeLog.textContent = "";
-typeLines(snakeLog, [
-  "> fetching GitHub activity...",
-  "> rendering snake..."
-], { speed: 40 });
-
-setTimeout(() => {
-  snakeLog.innerHTML += '<img src="https://raw.githubusercontent.com/Platane/snk/output/github-contribution-grid-snake.svg" style="width:100%;margin-top:1rem;" alt="GitHub snake">';
-}, 1600);
-
-/* ============================================================
-   TERMINAL: CONTACT (with modes + themes + simple autocomplete)
-   ============================================================ */
-const contactTerminal = document.getElementById("contact-terminal");
-const contactLog = document.getElementById("contact-log");
-const contactInput = document.getElementById("contact-input");
-
-const introText =
-`amber-terminal v1.0
-------------------------------------
-Type 'help' to see available commands.
-------------------------------------
-`;
-
-contactLog.textContent = introText;
-
-/* Themes */
-const themes = {
-  amber:  { fg: "#ffbf47", accent: "#ffbf47", border: "#ffbf47" },
-  green:  { fg: "#7CFC00", accent: "#7CFC00", border: "#7CFC00" },
-  grey:   { fg: "#d0d0d0", accent: "#d0d0d0", border: "#d0d0d0" }
-};
-let currentTheme = "amber";
-
-function applyTheme(name) {
-  const t = themes[name] || themes.amber;
-  currentTheme = name in themes ? name : "amber";
-  contactTerminal.style.setProperty("--term-fg", t.fg);
-  contactTerminal.style.setProperty("--term-accent", t.accent);
-  contactTerminal.style.setProperty("--term-border", t.border);
-}
-
-/* initial theme */
-applyTheme("amber");
-
-/* Command list for autocomplete/help */
-const commandList = [
-  "help",
-  "contact email",
-  "contact slack",
-  "contact form",
-  "contact now",
-  "guestbook",
-  "clear",
-  "theme amber",
-  "theme green",
-  "theme grey"
-];
-
-const helpText =
-`Available commands:
-  help
-  contact email
-  contact slack
-  contact form
-  contact now
-  guestbook
-  clear
-  theme amber
-  theme green
-  theme grey
-`;
-
-/* history */
-const historyList = [];
-let historyIndex = -1;
-
-/* terminal mode: 'command', 'form-name', 'form-email', 'form-message', 'form-confirm' */
-let termMode = "command";
-let formState = null; // { name, email, message }
-
-/* helpers */
-function writeToContactLog(text) {
-  contactLog.textContent += text + "\n";
-  contactLog.scrollTop = contactLog.scrollHeight;
-}
-
-/* core command handler */
-function handleCommandMode(cmd) {
-  historyList.push(cmd);
-  historyIndex = historyList.length;
-  writeToContactLog("> " + cmd);
-
-  if (cmd === "help") {
-    writeToContactLog(helpText);
-  } else if (cmd === "contact email") {
-    writeToContactLog("my email; quack@duckers.dev");
-  } else if (cmd === "contact slack") {
-    writeToContactLog("https://hackclub.enterprise.slack.com/archives/D09F00GLVHB");
-  } else if (cmd === "contact now") {
-    openGuestbook();
-    startContactFormFlow();
-  } else if (cmd === "contact form") {
-    startContactFormFlow();
-  } else if (cmd === "guestbook") {
-    writeToContactLog("Opening guestbook...");
-    openGuestbook();
-  } else if (cmd === "clear") {
-    contactLog.textContent = introText;
-  } else if (cmd.startsWith("theme ")) {
-    const themeName = cmd.split(" ")[1];
-    if (themes[themeName]) {
-      applyTheme(themeName);
-      writeToContactLog(`Theme set to ${themeName}.`);
-    } else {
-      writeToContactLog("Unknown theme. Try: theme amber | theme green | theme grey");
-    }
-  } else {
-    writeToContactLog("Unknown command. Type 'help' for options.");
-  }
-}
-
-/* contact form flow (no underscores, step-by-step) */
-function startContactFormFlow() {
-  formState = { name: "", email: "", message: "" };
-  termMode = "form-name";
-  writeToContactLog("Starting contact form...");
-  writeToContactLog("Enter your name:");
-}
-
-function handleFormInput(value) {
-  if (!formState) return;
-
-  if (termMode === "form-name") {
-    formState.name = value;
-    writeToContactLog(`Name: ${value}`);
-    termMode = "form-email";
-    writeToContactLog("Enter your email:");
-  } else if (termMode === "form-email") {
-    formState.email = value;
-    writeToContactLog(`Email: ${value}`);
-    termMode = "form-message";
-    writeToContactLog("Enter your message (single line):");
-  } else if (termMode === "form-message") {
-    formState.message = value;
-    writeToContactLog(`Message: ${value}`);
-    termMode = "form-confirm";
-    writeToContactLog("Send message? (Y/N)");
-  } else if (termMode === "form-confirm") {
-    const answer = value.trim().toLowerCase();
-    if (answer === "y" || answer === "yes") {
-      sendFormState();
-    } else {
-      writeToContactLog("Cancelled. Message not sent.");
-      formState = null;
-      termMode = "command";
-    }
-  }
-}
-
-function sendFormState() {
-  writeToContactLog("Sending...");
-  const formData = new FormData();
-  formData.append("access_key", "ec99dac2-fd12-4669-83ec-9ff3ef48c519");
-  formData.append("name", formState.name);
-  formData.append("email", formState.email);
-  formData.append("message", formState.message);
-
-  fetch("https://api.web3forms.com/submit", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      writeToContactLog("✔ Message sent successfully!");
-    } else {
-      writeToContactLog("✖ Error sending message.");
-    }
-    formState = null;
-    termMode = "command";
-  })
-  .catch(() => {
-    writeToContactLog("✖ Error sending message.");
-    formState = null;
-    termMode = "command";
-  });
-}
-
-/* autocomplete state */
-let lastTabTime = 0;
-
-/* terminal input handlers */
-contactInput.addEventListener("keydown", e => {
-  const value = contactInput.value;
-
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const cmd = value.trim();
-    contactInput.value = "";
-
-    if (!cmd) return;
-
-    if (termMode === "command") {
-      handleCommandMode(cmd);
-    } else {
-      /* in form mode: don't treat as command, treat as answer */
-      writeToContactLog("> " + cmd);
-      handleFormInput(cmd);
-    }
-  } else if (termMode === "command" && e.key === "ArrowUp") {
-    e.preventDefault();
-    if (historyList.length === 0) return;
-    historyIndex = Math.max(0, historyIndex - 1);
-    contactInput.value = historyList[historyIndex] || "";
-  } else if (termMode === "command" && e.key === "ArrowDown") {
-    e.preventDefault();
-    if (historyList.length === 0) return;
-    historyIndex = Math.min(historyList.length, historyIndex + 1);
-    if (historyIndex === historyList.length) {
-      contactInput.value = "";
-    } else {
-      contactInput.value = historyList[historyIndex] || "";
-    }
-  } else if (termMode === "command" && e.key === "Tab") {
-    e.preventDefault();
-    const now = Date.now();
-    const prefix = value.trim();
-    if (!prefix) return;
-
-    const matches = commandList.filter(c => c.startsWith(prefix));
-    if (matches.length === 1) {
-      contactInput.value = matches[0];
-    } else if (matches.length > 1) {
-      if (now - lastTabTime < 400) {
-        writeToContactLog(matches.join("\n"));
+      function bindCopyButtons() {
+        const copyBtns = content.querySelectorAll('.copy-btn');
+        copyBtns.forEach(btn => {
+          btn.onclick = () => {
+            try { navigator.clipboard.writeText(btn.dataset.copy); } catch (e) {}
+            btn.textContent = '✓';
+            btn.style.color = '#3a6f55';
+            setTimeout(() => {
+              btn.textContent = '⧉';
+              btn.style.color = '';
+            }, 1200);
+          };
+        });
       }
-      lastTabTime = now;
-    }
-  }
-});
 
-/* ============================================================
-   GUESTBOOK POPUP
-   ============================================================ */
-const guestbookModal = document.getElementById("guestbook-modal");
+      function forceReflow(el){ void el.offsetWidth; }
 
-function openGuestbook() {
-  if (location.hash !== "#guestbook") {
-    location.hash = "#guestbook";
-  }
-  guestbookModal.classList.add("show");
-}
+      function showContent(html){
+        // put content then fade in
+        content.innerHTML = html;
+        bindCopyButtons();
+        content.classList.remove('hidden');
+        forceReflow(content);
+        content.classList.add('visible');
+      }
 
-function closeGuestbook() {
-  guestbookModal.classList.remove("show");
-  history.replaceState(null, "", window.location.pathname + window.location.search);
-}
+      function hideContentThenSwap(html, cb){
+        // fade out
+        content.classList.remove('visible');
+        content.classList.add('hidden');
+        // wait for transition to finish
+        setTimeout(() => {
+          showContent(html);
+          if (typeof cb === 'function') cb();
+        }, 260);
+      }
 
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    contactInput.focus({ preventScroll: true });
-  }, 50);
-});
+      function openSection(key){
+        if (isAnimating || key === currentSection) return;
+        isAnimating = true;
 
+        // First open: move title to top and fade in content
+        if (firstOpen){
+          title.classList.add('title-top');
+          // small delay so title movement starts before content fades in
+          setTimeout(() => {
+            showContent(templates[key]);
+            setTimeout(() => {
+              currentSection = key;
+              isAnimating = false;
+              firstOpen = false;
+            }, 300);
+          }, 180);
+          return;
+        }
 
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P49ED1QFVH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        // Subsequent opens: fade out old content, swap, fade in new content
+        hideContentThenSwap(templates[key], () => {
+          setTimeout(() => {
+            currentSection = key;
+            isAnimating = false;
+          }, 300);
+        });
+      }
 
-  gtag('config', 'G-P49ED1QFVH');
-</script>
+      // Attach handlers
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => openSection(btn.dataset.section));
+        btn.setAttribute('tabindex','0');
+        btn.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openSection(btn.dataset.section);
+          }
+        });
+      });
+
+      // Title float (medium strength, ease-out smoothing)
+      let lastX = 0, lastY = 0, raf = null;
+      document.addEventListener('mousemove', e => {
+        const targetX = (e.clientX / window.innerWidth - 0.5) * 12;
+        const targetY = (e.clientY / window.innerHeight - 0.5) * 12;
+        // soften float during active transitions
+        const damp = isAnimating ? 0.35 : 1;
+        lastX += (targetX * damp - lastX) * 0.18;
+        lastY += (targetY * damp - lastY) * 0.18;
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            title.style.transform = `translate(${lastX}px, ${lastY}px)`;
+            raf = null;
+          });
+        }
+      });
+
+      // Optionally open a default section on load (uncomment if desired)
+      // openSection('projects');
+    })();
+  </script>
 </body>
 </html>
