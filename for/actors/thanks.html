@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Focus | Thank You</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://unpkg.com" rel="stylesheet">
+    <script src="https://unpkg.com"></script>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --red: #e50914;
+            --offset: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .title-outline {
+            -webkit-text-stroke: 2px var(--text);
+            color: transparent;
+            text-transform: uppercase;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 0.9;
+            display: block;
+        }
+
+        .title-solid {
+            color: var(--text);
+            text-transform: uppercase;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 0.9;
+            display: block;
+            margin-bottom: 30px;
+        }
+
+        .brutal-card {
+            background: white;
+            border: 4px solid var(--text);
+            box-shadow: var(--offset) var(--offset) 0px var(--text);
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        p { font-weight: 700; font-size: 1.2rem; margin-bottom: 40px; }
+
+        .back-button {
+            display: inline-block;
+            padding: 20px 40px;
+            background: var(--red);
+            color: white;
+            text-decoration: none;
+            font-family: 'Archivo Black', sans-serif;
+            text-transform: uppercase;
+            border: 4px solid var(--text);
+            box-shadow: 8px 8px 0px var(--text);
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--text);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="brutal-card" data-aos="zoom-in">
+        <span class="title-outline">Thanks for your</span>
+        <span class="title-solid">message</span>
+       
+        <p>We aim to get back to you within 24 hours. However, if you inquire on a Firday, Saturday or Sunday you may have to wait up to 3 days for a reply.</p>
+       
+        <a href="index.html" class="back-button">Back to Home</a>
+    </div>
+
+    <script>
+        AOS.init({ duration: 800 });
+    </script>
+</body>
+</html>
