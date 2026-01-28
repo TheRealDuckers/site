@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castfolio | Actor Digital 2026</title>
+   
+    <!-- Heavy-Duty 2026 Typography -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://unpkg.com" rel="stylesheet">
+    <script src="https://unpkg.com"></script>
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --red: #e50914;
+            --offset: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* 2026 Outlined Title Style */
+        .title-outline {
+            -webkit-text-stroke: 2px var(--text);
+            color: transparent;
+            text-transform: uppercase;
+            font-family: 'Archivo Black', sans-serif;
+            transition: all 0.4s ease;
+        }
+        .title-solid {
+            color: var(--text);
+            text-transform: uppercase;
+            font-family: 'Archivo Black', sans-serif;
+        }
+
+        /* Brutalist Box with Offset Outlines */
+        .brutal-card {
+            background: white;
+            border: 4px solid var(--text);
+            box-shadow: var(--offset) var(--offset) 0px var(--text);
+            padding: 50px;
+            margin-bottom: 30px;
+            transition: 0.2s ease-in-out;
+        }
+        .brutal-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 18px 18px 0px var(--red);
+            border-color: var(--red);
+        }
+
+        /* Header */
+        header { padding: 150px 24px 80px; text-align: center; }
+        h1 { font-size: clamp(3rem, 10vw, 7.5rem); line-height: 0.9; margin-bottom: 20px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .section-label { font-weight: 900; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; display: block; }
+
+        /* Bio Box */
+        .bio-visual { filter: blur(7px); opacity: 0.9; line-height: 1.6; font-size: 1.2rem; user-select: none; color: black;}
+        .bio-cta { font-family: 'Archivo Black', sans-serif; font-size: 1.8rem; margin-top: 25px; display: block; border-top: 4px solid var(--text); padding-top: 20px; }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin: 60px 0; }
+        .step-tag { background: var(--text); color: white; padding: 5px 15px; display: inline-block; font-weight: 900; margin-bottom: 15px; }
+        .box-head { font-family: 'Archivo Black', sans-serif; font-size: 1.8rem; margin-bottom: 15px; }
+
+        /* Contact Form */
+        .cta-section { background: var(--red); padding: 120px 24px; color: white; border-top: 10px solid var(--text); }
+        .cta-section .title-outline { -webkit-text-stroke: 2px white; }
+        form { max-width: 600px; margin: 50px auto 0; }
+        input, textarea {
+            width: 100%; padding: 20px; margin-bottom: 20px; border: 4px solid var(--text);
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem;
+        }
+        button {
+            width: 100%; padding: 25px; background: var(--text); color: white; border: none;
+            font-family: 'Archivo Black', sans-serif; font-size: 2rem; cursor: pointer;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        button:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0px rgba(0,0,0,0.4); }
+
+        footer { padding: 60px; text-align: center; font-weight: 900; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            :root { --offset: 8px; }
+            h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 data-aos="zoom-in">
+            <span class="title-outline">The perfect addition</span><br>
+            <span class="title-solid">to any bio</span>
+        </h1>
+        <p style="font-weight: 700; font-size: 1.4rem; margin-top: 20px;">Stand out on the web.</p>
+    </header>
+
+    <div class="container">
+        <!-- Bio Visualizer -->
+        <div class="brutal-card" data-aos="fade-up">
+            <span class="section-label">BIO</span>
+            <div class="bio-visual">
+                Casey Logan is a graduate of the Royal Conservatoire and is thrilled to be making their West End debut. Credits include 'The Glass Menagerie' and 'Skins'. Casey is represented by Independent Talent and thanks their family for...
+            </div>
+            <span class="bio-cta">Check me out at mywebsite.com</span>
+        </div>
+
+        <!-- Steps -->
+        <h2 class="title-solid" style="font-size: 3.5rem; text-align: center; margin-top: 100px;" data-aos="fade-right">The Process</h2>
+        <div class="grid">
+            <div class="brutal-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="step-tag">01</div>
+                <h3 class="box-head">DESIGN</h3>
+                <p>We come up with a theme and produce your site, creating a color scheme and mockup text.</p>
+            </div>
+            <div class="brutal-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-tag">02</div>
+                <h3 class="box-head">PERSONALISE</h3>
+                <p>You send us your job history, headshots, bio, and any other material you want on your site. </p>
+            </div>
+            <div class="brutal-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-tag">03</div>
+                <h3 class="box-head">LAUNCH</h3>
+                <p>You choose a custom url, which is then configured to your site by our team. We manage everything for you, from DNS records to Search Engine Optimzation and custom links.</p>
+            </div>
+                        <div class="brutal-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="step-tag">04</div>
+                <h3 class="box-head">SHARE</h3>
+                <p>Thats it! We link your contact form and Spotlight (if applicable) to your email, and you now have a shiny new portfolio! </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form -->
+    <section class="cta-section">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1;">
+                <span class="title-outline">Get In The</span><br>
+                <span class="title-solid" style="color: white;">Spotlight</span>
+            </h2>
+           
+            <form action="https://api.web3forms.com" method="POST" data-aos="fade-up">
+            <input type="hidden" name="redirect" value="https://yourwebsite.com">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                <input type="text" name="name" placeholder="FULL NAME" required>
+                <input type="email" name="email" placeholder="EMAIL" required>
+                <textarea name="message" rows="5" placeholder="TELL US ABOUT YOU!" required></textarea>
+                <button type="submit">LETS GET A WEBSITE!</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 DUCKERS DEV.
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>
