@@ -43,7 +43,7 @@
             --primary: #f8f9fa;
             --secondary: #ffffff;
             --tertiary: #e9ecef;
-            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.9);
             
             --accent-green: #059669;
             --accent-pink: #ec4899;
@@ -90,9 +90,9 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(ellipse at 20% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.06) 0%, transparent 60%);
+                radial-gradient(ellipse at 20% 20%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.04) 0%, transparent 60%);
             pointer-events: none;
             z-index: -1;
         }
@@ -104,8 +104,8 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
             z-index: -1;
@@ -173,16 +173,35 @@
             width: 100%;
         }
 
-        .hero {
+        /* Full height sections */
+        .page-section {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
+            padding: 8rem 5%;
             position: relative;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .page-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-section.inner-content {
+            justify-content: flex-start;
+            padding-top: 10rem;
+        }
+
+        /* Hero specific */
+        .hero {
             overflow: hidden;
+            text-align: center;
+            align-items: center;
+            background: #0a0a0f;
         }
 
         .hero-bg {
@@ -192,111 +211,381 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -1;
+            z-index: 0;
         }
 
-        .hero-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(5, 150, 105, 0.15) 0%, transparent 25%),
-                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.12) 0%, transparent 25%),
-                radial-gradient(circle at 50% 50%, rgba(8, 145, 178, 0.1) 0%, transparent 30%);
-            animation: heroGlow 15s ease-in-out infinite;
-        }
-
-        @keyframes heroGlow {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(2%, 2%) rotate(1deg); }
-            50% { transform: translate(0, 4%) rotate(0deg); }
-            75% { transform: translate(-2%, 2%) rotate(-1deg); }
-        }
-
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 10%;
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), transparent);
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            right: 15%;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), transparent);
-            animation-delay: -5s;
-        }
-
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            bottom: 20%;
-            left: 20%;
-            background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), transparent);
-            animation-delay: -10s;
-        }
-
-        .shape-4 {
-            width: 100px;
-            height: 100px;
-            top: 30%;
-            right: 25%;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), transparent);
-            animation-delay: -15s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            25% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
-            50% { transform: translateY(0) rotate(0deg) scale(1); }
-            75% { transform: translateY(20px) rotate(-5deg) scale(0.95); }
-        }
-
-        .grid-pattern {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(5, 150, 105, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(5, 150, 105, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(40px, 40px); }
-        }
-
-        .hero::after {
-            content: '';
+        /* Stage floor */
+        .stage-floor {
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
+            width: 100%;
+            height: 35%;
+            background: linear-gradient(to top, #151520 0%, transparent 100%);
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: bottom;
+        }
+
+        .stage-floor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 80px,
+                rgba(255, 255, 255, 0.02) 80px,
+                rgba(255, 255, 255, 0.02) 82px
+            );
+        }
+
+        /* Stage lights / Spotlights */
+        .spotlight {
+            position: absolute;
+            width: 300px;
+            height: 600px;
+            top: -100px;
+            clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+            opacity: 0.15;
+            animation: spotlightSway 8s ease-in-out infinite;
+        }
+
+        .spotlight-1 {
+            left: 10%;
+            background: linear-gradient(to bottom, rgba(5, 150, 105, 0.8), transparent);
+            animation-delay: 0s;
+        }
+
+        .spotlight-2 {
+            left: 35%;
+            background: linear-gradient(to bottom, rgba(236, 72, 153, 0.8), transparent);
+            animation-delay: -2s;
+        }
+
+        .spotlight-3 {
+            left: 60%;
+            background: linear-gradient(to bottom, rgba(8, 145, 178, 0.8), transparent);
+            animation-delay: -4s;
+        }
+
+        .spotlight-4 {
+            left: 85%;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.8), transparent);
+            animation-delay: -6s;
+        }
+
+        @keyframes spotlightSway {
+            0%, 100% { transform: rotate(-5deg); opacity: 0.15; }
+            50% { transform: rotate(5deg); opacity: 0.25; }
+        }
+
+        /* Light beams */
+        .light-beam {
+            position: absolute;
+            top: 0;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.03) 30%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.03) 70%,
+                transparent 100%
+            );
+            transform-origin: top center;
+            animation: beamSweep 12s ease-in-out infinite;
+        }
+
+        .light-beam::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .beam-1 {
+            left: 15%;
+            color: var(--accent-green);
+            animation-delay: 0s;
+        }
+
+        .beam-2 {
+            left: 40%;
+            color: var(--accent-pink);
+            animation-delay: -3s;
+        }
+
+        .beam-3 {
+            left: 65%;
+            color: var(--accent-cyan);
+            animation-delay: -6s;
+        }
+
+        .beam-4 {
+            left: 85%;
+            color: var(--accent-purple);
+            animation-delay: -9s;
+        }
+
+        @keyframes beamSweep {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+
+        /* DMX PAR Can lights */
+        .par-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 200px;
-            background: linear-gradient(to top, var(--primary), transparent);
+            display: flex;
+            justify-content: space-around;
+            padding: 0 10%;
+        }
+
+        .par-light {
+            width: 60px;
+            height: 40px;
+            background: #1a1a25;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.5);
+        }
+
+        .par-light::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 20px;
+            border-radius: 50%;
+            animation: parGlow 2s ease-in-out infinite;
+        }
+
+        .par-light:nth-child(1)::before {
+            background: var(--accent-green);
+            box-shadow: 0 0 30px var(--accent-green), 0 0 60px var(--accent-green);
+            animation-delay: 0s;
+        }
+
+        .par-light:nth-child(2)::before {
+            background: var(--accent-pink);
+            box-shadow: 0 0 30px var(--accent-pink), 0 0 60px var(--accent-pink);
+            animation-delay: -0.5s;
+        }
+
+        .par-light:nth-child(3)::before {
+            background: var(--accent-cyan);
+            box-shadow: 0 0 30px var(--accent-cyan), 0 0 60px var(--accent-cyan);
+            animation-delay: -1s;
+        }
+
+        .par-light:nth-child(4)::before {
+            background: var(--accent-purple);
+            box-shadow: 0 0 30px var(--accent-purple), 0 0 60px var(--accent-purple);
+            animation-delay: -1.5s;
+        }
+
+        .par-light:nth-child(5)::before {
+            background: var(--accent-orange);
+            box-shadow: 0 0 30px var(--accent-orange), 0 0 60px var(--accent-orange);
+            animation-delay: -2s;
+        }
+
+        @keyframes parGlow {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(0.9); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Gobo / Pattern rings */
+        .gobo-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            opacity: 0.1;
+            animation: goboSpin 10s linear infinite;
+        }
+
+        .gobo-1 {
+            width: 400px;
+            height: 400px;
+            top: 20%;
+            left: 20%;
+            border-color: var(--accent-green);
+            animation-duration: 15s;
+        }
+
+        .gobo-2 {
+            width: 300px;
+            height: 300px;
+            top: 30%;
+            right: 20%;
+            border-color: var(--accent-pink);
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        .gobo-3 {
+            width: 250px;
+            height: 250px;
+            bottom: 20%;
+            left: 30%;
+            border-color: var(--accent-cyan);
+            animation-duration: 18s;
+        }
+
+        @keyframes goboSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Fog / Haze particles */
+        .fog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            animation: fogDrift 20s ease-in-out infinite;
+        }
+
+        @keyframes fogDrift {
+            0%, 100% { opacity: 0.5; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(-20px); }
+        }
+
+        /* Scrolling gobo patterns */
+        .gobo-pattern {
+            position: absolute;
+            bottom: 20%;
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            opacity: 0.05;
+        }
+
+        .gobo-pattern::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--text) 0px,
+                var(--text) 2px,
+                transparent 2px,
+                transparent 20px,
+                var(--text) 22px,
+                var(--text) 24px,
+                transparent 24px,
+                transparent 60px
+            );
+            animation: goboScroll 10s linear infinite;
+        }
+
+        @keyframes goboScroll {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Light rays from corners */
+        .corner-light {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            opacity: 0.08;
+        }
+
+        .corner-1 {
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, var(--accent-green), transparent);
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+
+        .corner-2 {
+            top: 0;
+            right: 0;
+            background: linear-gradient(225deg, var(--accent-pink), transparent);
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+        }
+
+        .corner-3 {
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(45deg, var(--accent-cyan), transparent);
+            clip-path: polygon(0 0, 0 100%, 100% 100%);
+        }
+
+        .corner-4 {
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(315deg, var(--accent-purple), transparent);
+            clip-path: polygon(100% 0, 0 100%, 100% 100%);
+        }
+
+        /* Animated color washes */
+        .color-wash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: colorWash 15s ease-in-out infinite;
+        }
+
+        @keyframes colorWash {
+            0%, 100% { 
+                background: radial-gradient(ellipse at 30% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
+                            radial-gradient(ellipse at 70% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+            }
+            33% { 
+                background: radial-gradient(ellipse at 50% 30%, rgba(8, 145, 178, 0.1) 0%, transparent 50%),
+                            radial-gradient(ellipse at 20% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 50%);
+            }
+            66% { 
+                background: radial-gradient(ellipse at 70% 40%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                            radial-gradient(ellipse at 30% 60%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+            }
+        }
+
+        /* Vignette */
+        .vignette {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
             pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Spotlight on title */
+        .title-spotlight {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 300px;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: spotlightPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes spotlightPulse {
+            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         .hero-title {
@@ -304,37 +593,59 @@
             font-size: clamp(3.5rem, 15vw, 10rem);
             line-height: 0.85;
             letter-spacing: 6px;
-            opacity: 0;
-            transform: translateY(60px);
-            animation: fadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s;
             position: relative;
             z-index: 1;
+            text-shadow: 
+                0 0 40px rgba(5, 150, 105, 0.5),
+                0 0 80px rgba(5, 150, 105, 0.3),
+                0 0 120px rgba(5, 150, 105, 0.2);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 40px rgba(5, 150, 105, 0.5),
+                    0 0 80px rgba(5, 150, 105, 0.3),
+                    0 0 120px rgba(5, 150, 105, 0.2);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 60px rgba(5, 150, 105, 0.7),
+                    0 0 100px rgba(5, 150, 105, 0.5),
+                    0 0 150px rgba(5, 150, 105, 0.3);
+            }
         }
 
         .hero-title .name {
             display: block;
-            color: var(--accent-green);
-            text-shadow: 0 4px 30px rgba(5, 150, 105, 0.3);
+            color: #ffffff;
+            text-shadow: 
+                0 0 40px rgba(5, 150, 105, 0.8),
+                0 0 80px rgba(5, 150, 105, 0.5),
+                0 0 120px rgba(5, 150, 105, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .hero-title .dev {
             display: block;
             font-size: 0.35em;
             letter-spacing: 0.3em;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.9);
             margin-top: 0.5rem;
+            text-shadow: 
+                0 0 20px rgba(236, 72, 153, 0.5),
+                0 0 40px rgba(236, 72, 153, 0.3);
         }
 
         .hero-subtitle {
             font-family: var(--font-mono);
             font-size: clamp(0.85rem, 1.5vw, 1.1rem);
-            color: var(--text-dim);
+            color: rgba(255, 255, 255, 0.8);
             margin-top: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.5s;
             position: relative;
             z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .hero-subtitle .tag {
@@ -344,29 +655,29 @@
             border: 1px solid var(--accent-green);
             color: var(--accent-green);
             font-size: 0.8rem;
-            background: rgba(5, 150, 105, 0.05);
+            background: rgba(5, 150, 105, 0.1);
+            text-shadow: none;
         }
 
         .hero-subtitle .tag.pink {
             border-color: var(--accent-pink);
             color: var(--accent-pink);
-            background: rgba(236, 72, 153, 0.05);
+            background: rgba(236, 72, 153, 0.1);
         }
 
         .hero-subtitle .tag.cyan {
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
-            background: rgba(8, 145, 178, 0.05);
+            background: rgba(8, 145, 178, 0.1);
         }
 
         .hero-tagline {
             font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             max-width: 550px;
             margin-top: 2rem;
             color: var(--text-muted);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.7s;
             position: relative;
             z-index: 1;
         }
@@ -380,14 +691,12 @@
             flex-direction: column;
             align-items: center;
             gap: 0.8rem;
-            opacity: 0;
-            animation: fadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
             z-index: 1;
         }
 
         .scroll-indicator span {
             font-size: 0.75rem;
-            color: var(--text-dim);
+            color: rgba(255, 255, 255, 0.6);
             letter-spacing: 3px;
         }
 
@@ -396,15 +705,9 @@
             height: 18px;
             border-right: 2px solid var(--accent-green);
             border-bottom: 2px solid var(--accent-green);
+            box-shadow: 2px 2px 10px rgba(5, 150, 105, 0.5);
             transform: rotate(45deg);
             animation: bounce 2s infinite;
-        }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         @keyframes bounce {
@@ -413,16 +716,17 @@
             60% { transform: translateY(5px) rotate(45deg); }
         }
 
-        section {
-            padding: 8rem 5%;
+        /* Section content */
+        .section-content {
             max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
         }
 
         .section-header {
             font-family: var(--font-display);
             font-size: clamp(2.5rem, 6vw, 4.5rem);
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
             position: relative;
             display: inline-block;
             letter-spacing: 2px;
@@ -443,132 +747,23 @@
             background: var(--gradient-2);
         }
 
-        .projects-grid {
+        /* About section */
+        .about-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: translateY(50px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        }
-
-        .project-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .project-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(124, 58, 237, 0.2);
-            box-shadow: 0 25px 60px rgba(124, 58, 237, 0.1);
-        }
-
-        .project-image {
-            height: 180px;
-            background: var(--tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-image::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--accent-purple), transparent 30%);
-            animation: rotate 4s linear infinite;
-            opacity: 0.2;
-        }
-
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-
-        .project-image span {
-            font-family: var(--font-display);
-            font-size: 4rem;
-            letter-spacing: 4px;
-            color: var(--text);
-            position: relative;
-            z-index: 1;
-            opacity: 0.4;
-        }
-
-        .project-info {
-            padding: 2rem;
-        }
-
-        .project-info h3 {
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            margin-bottom: 0.8rem;
-            letter-spacing: 1px;
-            color: var(--text);
-        }
-
-        .project-info p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.2rem;
-            line-height: 1.7;
-        }
-
-        .project-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .project-tag {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            padding: 0.35rem 0.7rem;
-            background: rgba(124, 58, 237, 0.08);
-            border: 1px solid rgba(124, 58, 237, 0.2);
-            color: var(--accent-purple);
-        }
-
-        .project-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--accent-green);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .project-link:hover {
-            color: var(--accent-cyan);
-            transform: translateX(5px);
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 5rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
             align-items: center;
         }
 
         @media (max-width: 900px) {
-            .about-content {
+            .about-grid {
                 grid-template-columns: 1fr;
                 gap: 3rem;
             }
         }
 
         .about-text p {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--text-muted);
             margin-bottom: 1.5rem;
             line-height: 1.8;
@@ -619,10 +814,6 @@
             background: var(--accent-cyan);
             color: white;
             box-shadow: 0 0 25px rgba(8, 145, 178, 0.3);
-        }
-
-        .about-visual {
-            position: relative;
         }
 
         .code-block {
@@ -677,21 +868,125 @@
         .code-block .variable { color: var(--accent-cyan); }
         .code-block .property { color: var(--accent-purple); }
 
-        .contact {
-            text-align: center;
-            padding: 10rem 5%;
-            position: relative;
+        /* Projects section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
-        .contact::before {
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(40px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .page-section.visible .project-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-card:nth-child(1) { transition-delay: 0.1s; }
+        .project-card:nth-child(2) { transition-delay: 0.2s; }
+        .project-card:nth-child(3) { transition-delay: 0.3s; }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 25px 60px rgba(124, 58, 237, 0.1);
+        }
+
+        .project-image {
+            height: 160px;
+            background: var(--tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 120px;
-            background: linear-gradient(to bottom, var(--accent-green), transparent);
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--accent-purple), transparent 30%);
+            animation: rotate 4s linear infinite;
+            opacity: 0.15;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .project-image span {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            color: var(--text);
+        }
+
+        .project-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .project-tag {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .project-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .project-link:hover {
+            color: var(--accent-cyan);
+            transform: translateX(5px);
+        }
+
+        /* Contact section */
+        .contact {
+            text-align: center;
+            align-items: center;
         }
 
         .contact-title {
@@ -709,7 +1004,7 @@
         .contact-text {
             color: var(--text-muted);
             font-size: 1.15rem;
-            margin-bottom: 3.5rem;
+            margin-bottom: 3rem;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
@@ -738,7 +1033,7 @@
             display: flex;
             justify-content: center;
             gap: 2.5rem;
-            margin-top: 3.5rem;
+            margin-top: 3rem;
         }
 
         .contact-link {
@@ -771,7 +1066,7 @@
 
         footer {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
             background: var(--secondary);
         }
@@ -807,21 +1102,64 @@
     <nav>
         <div class="logo">DUCKERS DEV</div>
         <ul class="nav-links">
-            <li><a href="#projects">Projects</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
-    <section class="hero">
+    <!-- Hero Section -->
+    <section id="hero" class="page-section hero">
         <div class="hero-bg">
-            <div class="grid-pattern"></div>
-            <div class="floating-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-                <div class="shape shape-4"></div>
+            <!-- Color wash background -->
+            <div class="color-wash"></div>
+            
+            <!-- Corner light effects -->
+            <div class="corner-light corner-1"></div>
+            <div class="corner-light corner-2"></div>
+            <div class="corner-light corner-3"></div>
+            <div class="corner-light corner-4"></div>
+            
+            <!-- DMX PAR Can lights -->
+            <div class="par-container">
+                <div class="par-light"></div>
+                <div class="par-light"></div>
+                <div class="par-light"></div>
+                <div class="par-light"></div>
+                <div class="par-light"></div>
             </div>
+            
+            <!-- Spotlights from above -->
+            <div class="spotlight spotlight-1"></div>
+            <div class="spotlight spotlight-2"></div>
+            <div class="spotlight spotlight-3"></div>
+            <div class="spotlight spotlight-4"></div>
+            
+            <!-- Light beams -->
+            <div class="light-beam beam-1"></div>
+            <div class="light-beam beam-2"></div>
+            <div class="light-beam beam-3"></div>
+            <div class="light-beam beam-4"></div>
+            
+            <!-- Gobo pattern rings -->
+            <div class="gobo-ring gobo-1"></div>
+            <div class="gobo-ring gobo-2"></div>
+            <div class="gobo-ring gobo-3"></div>
+            
+            <!-- Fog/haze effect -->
+            <div class="fog"></div>
+            
+            <!-- Gobo pattern on floor -->
+            <div class="gobo-pattern"></div>
+            
+            <!-- Stage floor perspective -->
+            <div class="stage-floor"></div>
+            
+            <!-- Vignette overlay -->
+            <div class="vignette"></div>
+            
+            <!-- Title spotlight -->
+            <div class="title-spotlight"></div>
         </div>
         
         <h1 class="hero-title">
@@ -840,72 +1178,24 @@
         </div>
     </section>
 
-    <section id="projects">
-        <h2 class="section-header">Projects</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-image">
-                    <span>WEB</span>
-                </div>
-                <div class="project-info">
-                    <h3>WebCue</h3>
-                    <p>A web-based alternative to QLab for running audio and lighting cues in the browser. Integrates with QLC+ for lighting control. Supports auto-advance, show saving/loading, and more.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">QLab Alternative</span>
-                        <span class="project-tag">QLC+</span>
-                        <span class="project-tag">Show Control</span>
-                    </div>
-                    <a href="https://therealduckers.github.io/WebCue" target="_blank" rel="noopener noreferrer" class="project-link">Try it &rarr;</a>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <span>LYRIC</span>
-                </div>
-                <div class="project-info">
-                    <h3>LyricShow</h3>
-                    <p>Displays lyrics from lrc files in a clean, readable format. Perfect for live performances, rehearsals, or any event where you need to follow along with synced lyrics.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">Lyrics</span>
-                        <span class="project-tag">LRC</span>
-                        <span class="project-tag">Live Performance</span>
+    <!-- About Section -->
+    <section id="about" class="page-section inner-content">
+        <div class="section-content">
+            <h2 class="section-header pink">Who I Am</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>Hey! I'm Duckers &mdash; a web developer and theatre tech engineer from the UK. I love building tools that make live productions smoother and more accessible.</p>
+                    <p>I'm an active member of <strong>Hack Club</strong> and spend my time coding, singing, and creating cool projects. My main focus is on theatre technology &mdash; making show control accessible to everyone through web-based tools.</p>
+                    <p>When I'm not coding, you'll find me working on lighting designs for theatre productions or writing blog posts about what I've been building.</p>
+                    <div class="skills">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag pink">HTML</span>
+                        <span class="skill-tag cyan">QLC+</span>
+                        <span class="skill-tag">DMX</span>
+                        <span class="skill-tag pink">Show Control</span>
+                        <span class="skill-tag cyan">QLab</span>
                     </div>
                 </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <span>BLOG</span>
-                </div>
-                <div class="project-info">
-                    <h3>blog.duckers.dev</h3>
-                    <p>My personal blog powered by GitHub Issues. Writing about web development, theatre tech, and whatever else I'm building.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">Blog</span>
-                        <span class="project-tag">GitHub Issues</span>
-                    </div>
-                    <a href="https://blog.duckers.dev" target="_blank" rel="noopener noreferrer" class="project-link">Read &rarr;</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about">
-        <h2 class="section-header pink">Who I Am</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Hey! I'm Duckers &mdash; a web developer and theatre tech engineer from the UK. I love building tools that make live productions smoother and more accessible.</p>
-                <p>I'm an active member of <strong>Hack Club</strong> and spend my time coding, singing, and creating cool projects. My main focus is on theatre technology &mdash; making show control accessible to everyone through web-based tools.</p>
-                <p>When I'm not coding, you'll find me working on lighting designs for theatre productions or writing blog posts about what I've been building.</p>
-                <div class="skills">
-                    <span class="skill-tag">JavaScript</span>
-                    <span class="skill-tag pink">HTML</span>
-                    <span class="skill-tag cyan">QLC+</span>
-                    <span class="skill-tag">DMX</span>
-                    <span class="skill-tag pink">Show Control</span>
-                    <span class="skill-tag cyan">QLab</span>
-                </div>
-            </div>
-            <div class="about-visual">
                 <div class="code-block">
                     <div class="dots">
                         <span class="dot red"></span>
@@ -932,14 +1222,69 @@
         </div>
     </section>
 
-    <section id="contact" class="contact">
-        <h2 class="contact-title">Let's <span>Chat</span></h2>
-        <p class="contact-text">Got a project in mind? Want to collaborate? Just want to say hi? Drop me a message!</p>
-        <a href="mailto:quack@duckers.dev" class="cta-button">Get In Touch</a>
-        <div class="contact-links">
-            <a href="https://github.com/TheRealDuckers" target="_blank" rel="noopener noreferrer" class="contact-link">GitHub</a>
-            <a href="https://blog.duckers.dev" target="_blank" rel="noopener noreferrer" class="contact-link">Blog</a>
-            <a href="https://duckers.dev" target="_blank" rel="noopener noreferrer" class="contact-link">Main Site</a>
+    <!-- Projects Section -->
+    <section id="projects" class="page-section inner-content">
+        <div class="section-content">
+            <h2 class="section-header">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <span>WEB</span>
+                    </div>
+                    <div class="project-info">
+                        <h3>WebCue</h3>
+                        <p>A web-based alternative to QLab for running audio and lighting cues in the browser. Integrates with QLC+ for lighting control.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">QLab Alternative</span>
+                            <span class="project-tag">QLC+</span>
+                            <span class="project-tag">Show Control</span>
+                        </div>
+                        <a href="https://therealduckers.github.io/WebCue" target="_blank" rel="noopener noreferrer" class="project-link">Try it &rarr;</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <span>LYRIC</span>
+                    </div>
+                    <div class="project-info">
+                        <h3>LyricShow</h3>
+                        <p>Displays lyrics from lrc files in a clean, readable format. Perfect for live performances and rehearsals.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Lyrics</span>
+                            <span class="project-tag">LRC</span>
+                            <span class="project-tag">Live Performance</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <span>BLOG</span>
+                    </div>
+                    <div class="project-info">
+                        <h3>blog.duckers.dev</h3>
+                        <p>My personal blog powered by GitHub Issues. Writing about web development and theatre tech.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Blog</span>
+                            <span class="project-tag">GitHub Issues</span>
+                        </div>
+                        <a href="https://blog.duckers.dev" target="_blank" rel="noopener noreferrer" class="project-link">Read &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="page-section contact">
+        <div class="section-content">
+            <h2 class="contact-title">Let's <span>Chat</span></h2>
+            <p class="contact-text">Got a project in mind? Want to collaborate? Just want to say hi? Drop me a message!</p>
+            <a href="mailto:quack@duckers.dev" class="cta-button">Get In Touch</a>
+            <div class="contact-links">
+                <a href="https://github.com/TheRealDuckers" target="_blank" rel="noopener noreferrer" class="contact-link">GitHub</a>
+                <a href="https://blog.duckers.dev" target="_blank" rel="noopener noreferrer" class="contact-link">Blog</a>
+                <a href="https://duckers.dev" target="_blank" rel="noopener noreferrer" class="contact-link">Main Site</a>
+            </div>
         </div>
     </section>
 
@@ -962,31 +1307,26 @@
             window.addEventListener('scroll', navScrollHandler);
             navScrollHandler();
 
-            // Intersection Observer for scroll animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -30px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
+            // Intersection Observer for full-section scroll animations
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const delay = entry.target.dataset.delay || 0;
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, delay);
+                        entry.target.classList.add('visible');
                     }
                 });
-            }, observerOptions);
-
-            document.querySelectorAll('.project-card').forEach((card, i) => {
-                card.dataset.delay = i * 100;
-                observer.observe(card);
+            }, {
+                threshold: 0.2
             });
 
-            // Parallax effect on mouse move (subtle)
+            document.querySelectorAll('.page-section').forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // Parallax effect on mouse move (hero only)
             const heroSection = document.querySelector('.hero');
-            const shapes = document.querySelectorAll('.shape');
+            const spotlights = document.querySelectorAll('.spotlight');
+            const beams = document.querySelectorAll('.light-beam');
+            const goboRings = document.querySelectorAll('.gobo-ring');
             
             if (heroSection) {
                 heroSection.addEventListener('mousemove', (e) => {
@@ -995,12 +1335,22 @@
                     
                     const title = document.querySelector('.hero-title');
                     if (title) {
-                        title.style.transform = `translate(${x * 15}px, ${y * 15}px)`;
+                        title.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
                     }
                     
-                    shapes.forEach((shape, i) => {
-                        const speed = (i + 1) * 0.5;
-                        shape.style.transform = `translate(${x * 30 * speed}px, ${y * 30 * speed}px)`;
+                    spotlights.forEach((light, i) => {
+                        const speed = (i + 1) * 0.3;
+                        light.style.transform = `translateX(${x * 30 * speed}px) rotate(${x * 5 * (i % 2 === 0 ? 1 : -1)}deg)`;
+                    });
+                    
+                    beams.forEach((beam, i) => {
+                        const speed = (i + 1) * 0.4;
+                        beam.style.transform = `translateX(${x * 40 * speed}px) rotate(${x * 3}deg)`;
+                    });
+                    
+                    goboRings.forEach((ring, i) => {
+                        const speed = (i + 1) * 0.2;
+                        ring.style.transform = `translate(${x * 20 * speed}px, ${y * 20 * speed}px) rotate(${x * 10}deg)`;
                     });
                 });
                 
@@ -1009,8 +1359,14 @@
                     if (title) {
                         title.style.transform = 'translate(0, 0)';
                     }
-                    shapes.forEach(shape => {
-                        shape.style.transform = 'translate(0, 0)';
+                    spotlights.forEach(light => {
+                        light.style.transform = 'translateX(0) rotate(0deg)';
+                    });
+                    beams.forEach(beam => {
+                        beam.style.transform = 'translateX(0) rotate(0deg)';
+                    });
+                    goboRings.forEach(ring => {
+                        ring.style.transform = 'translate(0, 0) rotate(0deg)';
                     });
                 });
             }
