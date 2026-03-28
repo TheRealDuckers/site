@@ -179,7 +179,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 8rem 5%;
+            padding: 4rem 5%;
             position: relative;
             opacity: 0;
             transform: translateY(60px);
@@ -193,7 +193,7 @@
 
         .page-section.inner-content {
             justify-content: flex-start;
-            padding-top: 10rem;
+            padding-top: 6rem;
         }
 
         /* Hero specific */
@@ -245,59 +245,59 @@
         /* Stage lights / Spotlights */
         .spotlight {
             position: absolute;
-            width: 300px;
-            height: 600px;
-            top: -100px;
+            width: 250px;
+            height: 500px;
+            top: -80px;
             clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
-            opacity: 0.15;
-            animation: spotlightSway 8s ease-in-out infinite;
+            opacity: 0.08;
+            animation: spotlightSway 10s ease-in-out infinite;
         }
 
         .spotlight-1 {
             left: 10%;
-            background: linear-gradient(to bottom, rgba(5, 150, 105, 0.8), transparent);
+            background: linear-gradient(to bottom, rgba(5, 150, 105, 0.5), transparent);
             animation-delay: 0s;
         }
 
         .spotlight-2 {
             left: 35%;
-            background: linear-gradient(to bottom, rgba(236, 72, 153, 0.8), transparent);
-            animation-delay: -2s;
+            background: linear-gradient(to bottom, rgba(236, 72, 153, 0.5), transparent);
+            animation-delay: -2.5s;
         }
 
         .spotlight-3 {
             left: 60%;
-            background: linear-gradient(to bottom, rgba(8, 145, 178, 0.8), transparent);
-            animation-delay: -4s;
+            background: linear-gradient(to bottom, rgba(8, 145, 178, 0.5), transparent);
+            animation-delay: -5s;
         }
 
         .spotlight-4 {
             left: 85%;
-            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.8), transparent);
-            animation-delay: -6s;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.5), transparent);
+            animation-delay: -7.5s;
         }
 
         @keyframes spotlightSway {
-            0%, 100% { transform: rotate(-5deg); opacity: 0.15; }
-            50% { transform: rotate(5deg); opacity: 0.25; }
+            0%, 100% { transform: rotate(-3deg); opacity: 0.06; }
+            50% { transform: rotate(3deg); opacity: 0.1; }
         }
 
         /* Light beams */
         .light-beam {
             position: absolute;
             top: 0;
-            width: 150px;
+            width: 100px;
             height: 100%;
             background: linear-gradient(
                 180deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.03) 30%,
-                rgba(255, 255, 255, 0.08) 50%,
-                rgba(255, 255, 255, 0.03) 70%,
+                rgba(255, 255, 255, 0.015) 30%,
+                rgba(255, 255, 255, 0.03) 50%,
+                rgba(255, 255, 255, 0.015) 70%,
                 transparent 100%
             );
             transform-origin: top center;
-            animation: beamSweep 12s ease-in-out infinite;
+            animation: beamSweep 15s ease-in-out infinite;
         }
 
         .light-beam::before {
@@ -306,10 +306,9 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 2px;
+            width: 1px;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
-            box-shadow: 0 0 20px currentColor;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
         }
 
         .beam-1 {
@@ -337,8 +336,8 @@
         }
 
         @keyframes beamSweep {
-            0%, 100% { transform: rotate(-8deg); }
-            50% { transform: rotate(8deg); }
+            0%, 100% { transform: rotate(-4deg); }
+            50% { transform: rotate(4deg); }
         }
 
         /* DMX PAR Can lights */
@@ -368,45 +367,45 @@
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 30px;
-            height: 20px;
+            width: 24px;
+            height: 16px;
             border-radius: 50%;
-            animation: parGlow 2s ease-in-out infinite;
+            animation: parGlow 3s ease-in-out infinite;
         }
 
         .par-light:nth-child(1)::before {
             background: var(--accent-green);
-            box-shadow: 0 0 30px var(--accent-green), 0 0 60px var(--accent-green);
+            box-shadow: 0 0 15px var(--accent-green);
             animation-delay: 0s;
         }
 
         .par-light:nth-child(2)::before {
             background: var(--accent-pink);
-            box-shadow: 0 0 30px var(--accent-pink), 0 0 60px var(--accent-pink);
-            animation-delay: -0.5s;
+            box-shadow: 0 0 15px var(--accent-pink);
+            animation-delay: -0.7s;
         }
 
         .par-light:nth-child(3)::before {
             background: var(--accent-cyan);
-            box-shadow: 0 0 30px var(--accent-cyan), 0 0 60px var(--accent-cyan);
-            animation-delay: -1s;
+            box-shadow: 0 0 15px var(--accent-cyan);
+            animation-delay: -1.4s;
         }
 
         .par-light:nth-child(4)::before {
             background: var(--accent-purple);
-            box-shadow: 0 0 30px var(--accent-purple), 0 0 60px var(--accent-purple);
-            animation-delay: -1.5s;
+            box-shadow: 0 0 15px var(--accent-purple);
+            animation-delay: -2.1s;
         }
 
         .par-light:nth-child(5)::before {
             background: var(--accent-orange);
-            box-shadow: 0 0 30px var(--accent-orange), 0 0 60px var(--accent-orange);
-            animation-delay: -2s;
+            box-shadow: 0 0 15px var(--accent-orange);
+            animation-delay: -2.8s;
         }
 
         @keyframes parGlow {
-            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(0.9); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         /* Gobo / Pattern rings */
@@ -414,8 +413,8 @@
             position: absolute;
             border-radius: 50%;
             border: 1px solid;
-            opacity: 0.1;
-            animation: goboSpin 10s linear infinite;
+            opacity: 0.04;
+            animation: goboSpin 20s linear infinite;
         }
 
         .gobo-1 {
@@ -424,7 +423,7 @@
             top: 20%;
             left: 20%;
             border-color: var(--accent-green);
-            animation-duration: 15s;
+            animation-duration: 25s;
         }
 
         .gobo-2 {
@@ -433,7 +432,7 @@
             top: 30%;
             right: 20%;
             border-color: var(--accent-pink);
-            animation-duration: 12s;
+            animation-duration: 20s;
             animation-direction: reverse;
         }
 
@@ -541,21 +540,21 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            animation: colorWash 15s ease-in-out infinite;
+            animation: colorWash 20s ease-in-out infinite;
         }
 
         @keyframes colorWash {
             0%, 100% { 
-                background: radial-gradient(ellipse at 30% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                            radial-gradient(ellipse at 70% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+                background: radial-gradient(ellipse at 30% 20%, rgba(5, 150, 105, 0.05) 0%, transparent 50%),
+                            radial-gradient(ellipse at 70% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
             }
             33% { 
-                background: radial-gradient(ellipse at 50% 30%, rgba(8, 145, 178, 0.1) 0%, transparent 50%),
-                            radial-gradient(ellipse at 20% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 50%);
+                background: radial-gradient(ellipse at 50% 30%, rgba(8, 145, 178, 0.05) 0%, transparent 50%),
+                            radial-gradient(ellipse at 20% 70%, rgba(5, 150, 105, 0.04) 0%, transparent 50%);
             }
             66% { 
-                background: radial-gradient(ellipse at 70% 40%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
-                            radial-gradient(ellipse at 30% 60%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+                background: radial-gradient(ellipse at 70% 40%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+                            radial-gradient(ellipse at 30% 60%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
             }
         }
 
@@ -575,17 +574,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120%;
-            height: 300px;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            width: 100%;
+            height: 200px;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
-            animation: spotlightPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes spotlightPulse {
-            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         .hero-title {
@@ -595,47 +588,21 @@
             letter-spacing: 6px;
             position: relative;
             z-index: 1;
-            text-shadow: 
-                0 0 40px rgba(5, 150, 105, 0.5),
-                0 0 80px rgba(5, 150, 105, 0.3),
-                0 0 120px rgba(5, 150, 105, 0.2);
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes titleGlow {
-            0%, 100% { 
-                text-shadow: 
-                    0 0 40px rgba(5, 150, 105, 0.5),
-                    0 0 80px rgba(5, 150, 105, 0.3),
-                    0 0 120px rgba(5, 150, 105, 0.2);
-            }
-            50% { 
-                text-shadow: 
-                    0 0 60px rgba(5, 150, 105, 0.7),
-                    0 0 100px rgba(5, 150, 105, 0.5),
-                    0 0 150px rgba(5, 150, 105, 0.3);
-            }
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(5, 150, 105, 0.3);
         }
 
         .hero-title .name {
             display: block;
             color: #ffffff;
-            text-shadow: 
-                0 0 40px rgba(5, 150, 105, 0.8),
-                0 0 80px rgba(5, 150, 105, 0.5),
-                0 0 120px rgba(5, 150, 105, 0.3),
-                0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .hero-title .dev {
             display: block;
             font-size: 0.35em;
             letter-spacing: 0.3em;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.7);
             margin-top: 0.5rem;
-            text-shadow: 
-                0 0 20px rgba(236, 72, 153, 0.5),
-                0 0 40px rgba(236, 72, 153, 0.3);
         }
 
         .hero-subtitle {
@@ -726,7 +693,7 @@
         .section-header {
             font-family: var(--font-display);
             font-size: clamp(2.5rem, 6vw, 4.5rem);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             position: relative;
             display: inline-block;
             letter-spacing: 2px;
