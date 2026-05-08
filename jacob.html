@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Renderer</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f0f0; padding-left: 50px; padding-right: 50px; }
+        
+        #warning-box { 
+            background: #fff3cd; border: 1px solid #ffeeba; padding: 30px; 
+            border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
+        #display-area { 
+            display: none; width: 80%; max-width: 600px; background: white; 
+            padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
+        button.main-btn { background: #ffc107; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button.main-btn:hover { background: #e0a800; }
+    </style>
+</head>
+<body>
+
+    <!-- This is shown first -->
+    <div id="warning-box">
+        <h2>⚠️ Warning</h2>
+        <p>This site was made by one of my friends, and I cannot be held responsible for the cringy-ness, bad css, or lack of next.js builds. If you understand the risks, press proceed. if you don't understand the risks, then understand them, and then press proceed.</p>
+        <button class="main-btn" onclick="renderContent()">Proceed</button>
+    </div>
+
+    <!-- This starts empty and hidden -->
+    <div id="display-area"></div>
+
+    <script>
+        function renderContent() {
+            const warning = document.getElementById('warning-box');
+            const display = document.getElementById('display-area');
+            
+            // The HTML content to be RENDERED
+            const htmlToRender = `
+                <div style="text-align: center;">
+                    <h1 style="color: #27ae60;">✔ Success: Fail</h1>
+                    <p>Bro the site ain't here yet. here is some random text box.</p>
+                    <hr>
+                    <input type="text" placeholder="Type here..." style="padding: 10px; width: 60%;">
+                    <button style="padding: 10px; cursor: pointer;" onclick="alert('Well done you can type and press buttons.')">Click me</button>
+                </div>
+            `;
+
+            // 1. Hide the warning
+            warning.style.display = 'none';
+            // 2. Show the display container
+            display.style.display = 'block';
+            // 3. Inject and RENDER the HTML
+            display.innerHTML = htmlToRender;
+        }
+    </script>
+
+</body>
+</html>
