@@ -5,42 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>a random ahhhh site</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f0f0; padding-left: 50px; padding-right: 50px; }
+        /* Main Page Styles */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef2f3; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         
+        /* High-Quality Warning Box */
         #warning-box { 
-            background: #fff3cd; border: 1px solid #ffeeba; padding: 30px; 
-            border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            background: white; border-radius: 16px; padding: 40px; width: 350px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 6px solid #ff4b2b;
         }
 
-        #display-area { 
-            display: none; width: 80%; max-width: 600px; background: white; 
-            padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
+        #warning-box h2 { color: #333; margin-top: 0; }
+        #warning-box p { color: #666; font-size: 0.95rem; margin-bottom: 25px; }
 
-        button.main-btn { background: #ffc107; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button.main-btn:hover { background: #e0a800; }
+        .btn-proceed { 
+            background: #ff4b2b; color: white; border: none; padding: 12px 30px; 
+            border-radius: 25px; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .btn-proceed:hover { background: #ff416c; transform: translateY(-2px); }
+
+        /* Isolated Container */
+        #iframe-container { display: none; width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <!-- This is shown first -->
     <div id="warning-box">
-        <h2>⚠️ Warning</h2>
-        <p>This site was made by one of my friends, and I cannot be held responsible for the cringy-ness, bad css, or lack of next.js builds. If you understand the risks, press proceed. if you don't understand the risks, then understand them, and then press proceed.</p>
-        <button class="main-btn" onclick="renderContent()">Proceed</button>
+        <h2>WARNING</h2>
+        <p>This site was made by one of my friends, and I cannot be held responsible for the cringy-ness, AI vibe cody-ness, bad css, or lack of next.js builds. If you understand the risks, press proceed. if you don't understand the risks, then understand them, and then press proceed.</p>
+        <button class="btn-proceed" onclick="renderContent()">Proceed</button>
     </div>
 
-    <!-- This starts empty and hidden -->
-    <div id="display-area"></div>
+    <!-- The Iframe isolates the styles -->
+    <iframe id="iframe-container"></iframe>
 
     <script>
-        function renderContent() {
-            const warning = document.getElementById('warning-box');
-            const display = document.getElementById('display-area');
-            
-            // The HTML content to be RENDERED
-            const htmlToRender = `
-                <!DOCTYPE html>
+        const warning = document.getElementById('warning-box');
+        const iframe = document.getElementById('iframe-container');
+
+        const secretContent = `
+            <!DOCTYPE html>
 <html>
 <head>
     <title>~* [XxX_GROUND_ZERO_XxX] *~</title>
@@ -181,15 +185,26 @@
 
 </body>
 </html>
-            `;
+        `;
 
-            // 1. Hide the warning
+        function renderContent() {
             warning.style.display = 'none';
-            // 2. Show the display container
-            display.style.display = 'block';
-            // 3. Inject and RENDER the HTML
-            display.innerHTML = htmlToRender;
+            iframe.style.display = 'block';
+            
+            // Writing the content directly into the iframe
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(secretContent);
+            doc.close();
         }
+
+        // Logic for ?bypass
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('bypass')) {
+                renderContent();
+            }
+        };
     </script>
 
 </body>
