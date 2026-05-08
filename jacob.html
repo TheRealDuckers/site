@@ -40,13 +40,147 @@
             
             // The HTML content to be RENDERED
             const htmlToRender = `
-                <div style="text-align: center;">
-                    <h1 style="color: #27ae60;">✔ Success: Fail</h1>
-                    <p>Bro the site ain't here yet. here is some random text box.</p>
-                    <hr>
-                    <input type="text" placeholder="Type here..." style="padding: 10px; width: 60%;">
-                    <button style="padding: 10px; cursor: pointer;" onclick="alert('Well done you can type and press buttons.')">Click me</button>
-                </div>
+                <!DOCTYPE html>
+<html>
+<head>
+    <title>~* [XxX_GROUND_ZERO_XxX] *~</title>
+    <style>
+        body {
+            background-color: #000;
+            background-image: url('https://transparenttextures.com');
+            color: #00ff00;
+            font-family: "Comic Sans MS", cursive;
+            margin: 0;
+            overflow-x: hidden;
+            cursor: url('https://cursors-4u.net'), auto;
+        }
+
+        /* Broken Table Layout */
+        .wrapper {
+            width: 1000px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 200px 1fr 200px;
+            gap: 10px;
+        }
+
+        .box {
+            background: #fff;
+            border: 4px ridge #ff00ff;
+            color: #000;
+            padding: 10px;
+        }
+
+        header {
+            grid-column: 1 / span 3;
+            background: yellow;
+            border: 5px solid red;
+            text-align: center;
+        }
+
+        /* 3D Ollie Centrepiece */
+        .ollie-3d {
+            width: 100%;
+            border: 5px solid lime;
+            background: #000;
+        }
+
+        /* Fake Winamp Music Player */
+        .music-player {
+            background: #333;
+            color: #00ff00;
+            border: 2px solid #aaa;
+            padding: 5px;
+            font-size: 10px;
+            font-family: monospace;
+        }
+
+        .btn-bling {
+            background: linear-gradient(#ff00ff, #00ffff);
+            color: white;
+            font-weight: bold;
+            border: 4px outset #fff;
+            width: 100%;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .guestbook {
+            height: 150px;
+            overflow-y: scroll;
+            background: #eee;
+            border: 1px inset #000;
+            font-size: 11px;
+        }
+
+        .blink { animation: blinker 0.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <marquee scrollamount="15">WELCOME TO MY UNDERGROUND WORLD!!! NO NARKZ ALLOWED!!!</marquee>
+        <h1 style="margin:0; font-size: 50px;">XxX_SKATE_STATION_XxX</h1>
+    </header>
+
+    <!-- Sidebar 1: Stats & Music -->
+    <div class="box">
+        <h3>STUFF</h3>
+        <div class="music-player">
+            [ WINAMP 5.0 ]<br>
+            Playing: SK8ER_BOI.MP3<br>
+            02:45 / 03:20<br>
+            <div style="background:lime; width:70%; height:5px;"></div>
+        </div>
+        <hr>
+        <p>HITS: 0004521</p>
+        <p class="blink" style="color:red;">!!! NEW VIDEO !!!</p>
+    </div>
+
+    <!-- Main Column: The 3D Action -->
+    <div class="box">
+        <img src="https://pngtree.com" 
+             class="ollie-3d" alt="3D OLLIE">
+        
+        <div style="background: cyan; padding: 10px; border: 2px dashed black;">
+            <h3>LOG: JUNE 2004</h3>
+            <p>I tried to jump the 10-stair at the mall but I broke my board lol. My mom is gonna be so mad. Check out my [ [ <a href="#" onclick="alert('U R NOT READY!')">SICK FLIP GALLERY</a> ] ]</p>
+        </div>
+
+        <div style="margin-top:20px;">
+            <button class="btn-bling" onclick="window.open('https://unsplash.com')">~ VIEW GALLERY ~</button>
+        </div>
+    </div>
+
+    <!-- Sidebar 2: Top 8 & Guestbook -->
+    <div class="box">
+        <h3>MA CREW</h3>
+        <div class="guestbook">
+            <b>Sk8er_Gurl:</b> HAGS!!!<br>
+            <b>Shadow_Emo:</b> Nice deck bro.<br>
+            <b>Tom:</b> Add me back!<br>
+            <b>TonyH:</b> Do a 900 lol.<br>
+        </div>
+        <hr>
+        <h3>TOP TRICKZ</h3>
+        <ul style="font-size: 11px;">
+            <li>Kickflip (Landed)</li>
+            <li>Heelflip (Sketchy)</li>
+            <li>Nollie (Impossible)</li>
+        </ul>
+    </div>
+
+    <footer style="grid-column: 1 / span 3; text-align: center; color: white;">
+        <img src="https://archive.org" width="40">
+        PAGE STILL UNDER CONSTRUCTION - GO AWAY !!
+        <img src="https://archive.org" width="40">
+    </footer>
+</div>
+
+</body>
+</html>
             `;
 
             // 1. Hide the warning
