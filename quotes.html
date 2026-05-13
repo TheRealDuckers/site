@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes</title>
+    <link rel="preconnect" href="googleapis.com">
+    <link rel="preconnect" href="gstatic.com" crossorigin>
+    <link href="googleapis.com" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #fbf9f1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .app-wrapper {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+        .app-wrapper.shake {
+            animation: screen-shake 0.15s linear 2;
+        }
+
+        /* Home landing screen */
+        .home-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fbf9f1;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 2rem;
+            text-align: center;
+        }
+        .home-screen.hidden {
+            transform: translateY(-100vh);
+        }
+        .home-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: #1e272e;
+            margin-bottom: 1rem;
+        }
+        .home-subtitle {
+            font-size: 1.1rem;
+            color: #57606f;
+            margin-bottom: 3rem;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+        .start-btn {
+            background: #1e272e;
+            color: #fff;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Settings configuration UI panels */
+        .settings-bar {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+        }
+        .circle-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .circle-btn:active {
+            transform: scale(0.9);
+        }
+        .drawer-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 20;
+        }
+
+        /* Color setting panel selector */
+        .palette-panel {
+            position: absolute;
+            top: 90px;
+            left: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 1.2rem;
+            border-radius: 24px;
+            z-index: 25;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transform: scale(0.9) translateY(-10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .palette-panel.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .palette-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 4px;
+            text-align: left;
+        }
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Core scroll layouts */
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .quote-card {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+        .blob {
+            position: absolute;
+            background: linear-gradient(45deg, var(--c1), var(--c2));
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+            z-index: 1;
+            animation: float-around 20s infinite alternate ease-in-out;
+        }
+        .blob-1 { width: 500px; height: 500px; top: -10%; left: -10%; }
+        .blob-2 { width: 600px; height: 600px; bottom: -20%; right: -10%; animation-delay: -5s; }
+
+        .content {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 3.5rem 3rem;
+            border-radius: 40px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            z-index: 2;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .quote-card.active .content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: #1e272e;
+            line-height: 1.4;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        .quote-author {
+            font-size: 0.95rem;
+            color: #57606f;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .heart-pop {
+            position: absolute;
+            font-size: 8rem;
+            z-index: 10;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            filter: drop-shadow(0 10px 20px rgba(255, 71, 87, 0.4));
+            animation: heart-burst 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Navigation elements built for skipping pages */
+        .nav-arrow {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 15;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            font-weight: bold;
+            color: #1e272e;
+            animation: bounce-ui 2s infinite;
+        }
+
+        /* Sidebar favorites list module */
+        .favorites-drawer {
+            position: absolute;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.05);
+            z-index: 30;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .favorites-drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .drawer-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #57606f; }
+        .drawer-title { font-size: 1.6rem; color: #1e272e; font-weight: 700; }
+        .favorites-list { flex: 1; overflow-y: auto; list-style: none; padding-right: 5px; }
+        .favorite-item {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            position: relative;
+            animation: slide-in 0.3s ease forwards;
+        }
+        .fav-text { font-family: 'Playfair Display', serif; font-size: 1rem; color: #1e272e; line-height: 1.4; margin-bottom: 0.5rem; padding-right: 20px; }
+        .fav-author { font-size: 0.75rem; color: #a4b0be; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .delete-btn { position: absolute; top: 12px; right: 15px; background: none; border: none; color: #ff4757; cursor: pointer; font-size: 0.9rem; opacity: 0.6; }
+
+        /* Animation Keyframe Blocks */
+        @keyframes float-around {
+            0% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: translate(0, 0) rotate(0deg); }
+            50% { border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; transform: translate(40px, -60px) rotate(90deg); }
+            100% { border-radius: 34% 66% 39% 61% / 37% 63% 37% 63%; transform: translate(-20px, 20px) rotate(180deg); }
+        }
+        @keyframes heart-burst {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-15deg); }
+            30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(-50%, -130px) scale(0.6); }
+        }
+        @keyframes screen-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        @keyframes bounce-ui {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -8px); }
+        }
+        @keyframes slide-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Landing Homepage Structure -->
+    <div class="home-screen" id="homeScreen">
+        <h1 class="home-title">Quotes</h1>
+        <p class="home-subtitle">Swipe for quotes, double tap to like and save, and press settings to change colors.</p>
+        <button class="start-btn" id="startBtn">Ok, got it</button>
+    </div>
+
+    <div class="app-wrapper" id="appWrapper">
+        <!-- Control Configurations -->
+        <div class="settings-bar">
+            <button class="circle-btn" id="homeNavBtn">🏠</button>
+            <button class="circle-btn" id="paletteBtn">🎨</button>
+        </div>
+        <button class="circle-btn drawer-toggle" id="openDrawer">💖</button>
+        
+        <!-- Theme dropdown panel selection -->
+        <div class="palette-panel" id="palettePanel">
+            <button class="palette-option" data-theme="sunset">
+                <div class="color-preview" style="background: linear-gradient(45deg, #ff9a9e, #fda085);"></div> Sunset Rose
+            </button>
+            <button class="palette-option" data-theme="ocean">
+                <div class="color-preview" style="background: linear-gradient(45deg, #a1c4fd, #c2e9fb);"></div> Calm Ocean
+            </button>
+            <button class="palette-option" data-theme="forest">
+                <div class="color-preview" style="background: linear-gradient(45deg, #d4fc79, #96e6a1);"></div> Fresh Timber
+            </button>
+            <button class="palette-option" data-theme="nordic">
+                <div class="color-preview" style="background: linear-gradient(45deg, #cfd9df, #e2ebf0);"></div> Nordic Ice
+            </button>
+        </div>
+
+        <button class="nav-arrow" id="scrollArrow">↓</button>
+        <div class="scroll-container" id="container"></div>
+
+        <!-- Sidebar management drawer -->
+        <div class="favorites-drawer" id="drawer">
+            <div class="drawer-header">
+                <h2 class="drawer-title">Saved Quotes</h2>
+                <button class="drawer-close" id="closeDrawer">✕</button>
+            </div>
+            <ul class="favorites-list" id="favList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const appWrapper = document.getElementById('appWrapper');
+        const drawer = document.getElementById('drawer');
+        const openDrawerBtn = document.getElementById('openDrawer');
+        const closeDrawerBtn = document.getElementById('closeDrawer');
+        const favList = document.getElementById('favList');
+        const scrollArrow = document.getElementById('scrollArrow');
+        const homeScreen = document.getElementById('homeScreen');
+        const startBtn = document.getElementById('startBtn');
+        const homeNavBtn = document.getElementById('homeNavBtn');
+        const paletteBtn = document.getElementById('paletteBtn');
+        const palettePanel = document.getElementById('palettePanel');
+        
+        let savedFavorites = JSON.parse(localStorage.getItem('organic_quotes_favs')) || [];
+        let activeTheme = localStorage.getItem('organic_quotes_theme') || 'sunset';
+
+        // Color profiles matrix mapping for background generations
+        const themes = {
+            sunset: [ {c1: '#ff9a9e', c2: '#fecfef'}, {c1: '#f6d365', c2: '#fda085'} ],
+            ocean: [ {c1: '#a1c4fd', c2: '#c2e9fb'}, {c1: '#8fd3f4', c2: '#84fab0'} ],
+            forest: [ {c1: '#d4fc79', c2: '#96e6a1'}, {c1: '#fff1eb', c2: '#ace0f9'} ],
+            nordic: [ {c1: '#cfd9df', c2: '#e2ebf0'}, {c1: '#a6c0fe', c2: '#f68084'} ]
+        };
+
+        function getThemeColors() {
+            const chosen = themes[activeTheme];
+            return { p1: chosen[0], p2: chosen[1] };
+        }
+
+        function applyCurrentThemeToDOM() {
+            const cards = document.querySelectorAll('.quote-card');
+            cards.forEach(card => {
+                const colors = getThemeColors();
+                const b1 = card.querySelector('.blob-1');
+                const b2 = card.querySelector('.blob-2');
+                if(b1 && b2) {
+                    b1.style.setProperty('--c1', colors.p1.c1); b1.style.setProperty('--c2', colors.p1.c2);
+                    b2.style.setProperty('--c1', colors.p2.c1); b2.style.setProperty('--c2', colors.p2.c2);
+                }
+            });
+        }
+
+        function createCardElement(quote, author) {
+            const card = document.createElement('section');
+            card.className = 'quote-card';
+            const colors = getThemeColors();
+
+            card.innerHTML = `
+                <div class="blob blob-1" style="--c1: ${colors.p1.c1}; --c2: ${colors.p1.c2};"></div>
+                <div class="blob blob-2" style="--c1: ${colors.p2.c1}; --c2: ${colors.p2.c2};"></div>
+                <div class="content">
+                    <p class="quote-text">"${quote}"</p>
+                    <p class="quote-author">${author || 'Unknown'}</p>
+                </div>
+            `;
+            
+            let lastTap = 0;
+            card.addEventListener('click', (e) => {
+                if(palettePanel.classList.contains('open') && !e.target.closest('#paletteBtn')) {
+                    palettePanel.classList.remove('open');
+                }
+                const now = Date.now();
+                if ((now - lastTap) < 300) {
+                    handleDoubleTap(card, quote, author, e.clientX, e.clientY);
+                }
+                lastTap = now;
+            });
+            
+            container.appendChild(card);
+            observer.observe(card);
+        }
+
+        function handleDoubleTap(card, quote, author, x, y) {
+            appWrapper.classList.add('shake');
+            setTimeout(() => appWrapper.classList.remove('shake'), 300);
+
+            if (navigator.vibrate) navigator.vibrate(50);
+
+            const heart = document.createElement('div');
+            heart.className = 'heart-pop';
+            heart.innerHTML = '❤️';
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            card.appendChild(heart);
+            setTimeout(() => heart.remove(), 800);
+
+            if (!savedFavorites.some(item => item.quote === quote && item.author === author)) {
+                const newFav = { quote, author, id: Date.now().toString() };
+                savedFavorites.unshift(newFav);
+                localStorage.setItem('organic_quotes_favs', JSON.stringify(savedFavorites));
+                renderFavoriteItem(newFav);
+            }
+        }
+
+        function renderFavoriteItem(item) {
+            const li = document.createElement('li');
+            li.className = 'favorite-item';
+            li.innerHTML = `
+                <button class="delete-btn">✕</button>
+                <p class="fav-text">"${item.quote}"</p>
+                <p class="fav-author">${item.author || 'Unknown'}</p>
+            `;
+            li.querySelector('.delete-btn').addEventListener('click', () => {
+                savedFavorites = savedFavorites.filter(f => f.id !== item.id);
+                localStorage.setItem('organic_quotes_favs', JSON.stringify(savedFavorites));
+                li.remove();
+            });
+            favList.insertBefore(li, favList.firstChild);
+        }
+
+        async function fetchQuotesBatch() {
+            try {
+                const response = await fetch('allorigins.win' + encodeURIComponent('zenquotes.io'));
+                const json = await response.json();
+                const data = JSON.parse(json.contents);
+                data.forEach(item => createCardElement(item.q, item.a));
+            } catch (error) {
+                createCardElement("Nature always wears the colors of the spirit.", "Ralph Waldo Emerson");
+                createCardElement("The earth has music for those who listen.", "George Santayana");
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target === container.lastElementChild || entry.target === container.lastElementChild.previousElementSibling) {
+                        fetchQuotesBatch();
+                    }
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, { root: container, threshold: 0.5 });
+
+        // Action interface click configurations
+        startBtn.addEventListener('click', () => homeScreen.classList.add('hidden'));
+        homeNavBtn.addEventListener('click', () => homeScreen.classList.remove('hidden'));
+        openDrawerBtn.addEventListener('click', () => drawer.classList.add('open'));
+        closeDrawerBtn.addEventListener('click', () => drawer.classList.remove('open'));
+        paletteBtn.addEventListener('click', (e) => { e.stopPropagation(); palettePanel.classList.toggle('open'); });
+
+        // Automated execution configuration skipping pages manually 
+        scrollArrow.addEventListener('click', () => {
+            const cards = Array.from(document.querySelectorAll('.quote-card'));
+            const currentIndex = cards.findIndex(card => card.classList.contains('active'));
+            if (currentIndex !== -1 && currentIndex < cards.length - 1) {
+                cards[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Theme reconfiguration system triggers
+        document.querySelectorAll('.palette-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeTheme = btn.getAttribute('data-theme');
+                localStorage.setItem('organic_quotes_theme', activeTheme);
+                applyCurrentThemeToDOM();
+                palettePanel.classList.remove('open');
+            });
+        });
+
+        async function init() {
+            savedFavorites.forEach(item => renderFavoriteItem(item));
+            await fetchQuotesBatch();
+            if (container.firstElementChild) container.firstElementChild.classList.add('active');
+        }
+
+        init();
+    </script>
+</body>
+</html>
