@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotes</title>
+    <title>Organic Quotes Workspace</title>
     <link rel="preconnect" href="googleapis.com">
     <link rel="preconnect" href="gstatic.com" crossorigin>
     <link href="googleapis.com" rel="stylesheet">
@@ -324,9 +324,9 @@
 
     <!-- Landing Homepage Structure -->
     <div class="home-screen" id="homeScreen">
-        <h1 class="home-title">Quotes</h1>
-        <p class="home-subtitle">Swipe for quotes, double tap to like and save, and press settings to change colors.</p>
-        <button class="start-btn" id="startBtn">Ok, got it</button>
+        <h1 class="home-title">Daily Breath</h1>
+        <p class="home-subtitle">An organic canvas of dynamic insights. Swipe, explore, and preserve your favorite words.</p>
+        <button class="start-btn" id="startBtn">Enter Canvas</button>
     </div>
 
     <div class="app-wrapper" id="appWrapper">
@@ -382,8 +382,11 @@
         
         let savedFavorites = JSON.parse(localStorage.getItem('organic_quotes_favs')) || [];
         let activeTheme = localStorage.getItem('organic_quotes_theme') || 'sunset';
+        
+        // Tracking index limits for the live quotes pagination stream
+        let apiSkipTracker = 0;
+        let isFetching = false;
 
-        // Color profiles matrix mapping for background generations
         const themes = {
             sunset: [ {c1: '#ff9a9e', c2: '#fecfef'}, {c1: '#f6d365', c2: '#fda085'} ],
             ocean: [ {c1: '#a1c4fd', c2: '#c2e9fb'}, {c1: '#8fd3f4', c2: '#84fab0'} ],
@@ -478,14 +481,29 @@
         }
 
         async function fetchQuotesBatch() {
+            if (isFetching) return;
+            isFetching = true;
             try {
-                const response = await fetch('allorigins.win' + encodeURIComponent('zenquotes.io'));
-                const json = await response.json();
-                const data = JSON.parse(json.contents);
-                data.forEach(item => createCardElement(item.q, item.a));
+                // Fixed: Utilising a robust open endpoint alongside pagination layout mechanics 
+                const response = await fetch(`dummyjson.com{apiSkipTracker}`);
+                const data = await response.json();
+                
+                if(data && data.quotes && data.quotes.length > 0) {
+                    data.quotes.forEach(item => createCardElement(item.quote, item.author));
+                    apiSkipTracker += 10; // Shift data window up to completely clear repeating entries
+                }
             } catch (error) {
-                createCardElement("Nature always wears the colors of the spirit.", "Ralph Waldo Emerson");
-                createCardElement("The earth has music for those who listen.", "George Santayana");
+                console.error("Connection fallback active", error);
+                // Fail-safe static array fallback variations
+                const fallbacks = [
+                    ["Adopt the pace of nature: her secret is patience.", "Ralph Waldo Emerson"],
+                    ["The earth has music for those who listen.", "George Santayana"],
+                    ["In all things of nature there is something of the marvelous.", "Aristotle"],
+                    ["Look deep into nature, and then you will understand everything better.", "Albert Einstein"]
+                ];
+                fallbacks.forEach(f => createCardElement(f[0], f[1]));
+            } finally {
+                isFetching = false;
             }
         }
 
@@ -502,14 +520,12 @@
             });
         }, { root: container, threshold: 0.5 });
 
-        // Action interface click configurations
         startBtn.addEventListener('click', () => homeScreen.classList.add('hidden'));
         homeNavBtn.addEventListener('click', () => homeScreen.classList.remove('hidden'));
         openDrawerBtn.addEventListener('click', () => drawer.classList.add('open'));
         closeDrawerBtn.addEventListener('click', () => drawer.classList.remove('open'));
         paletteBtn.addEventListener('click', (e) => { e.stopPropagation(); palettePanel.classList.toggle('open'); });
 
-        // Automated execution configuration skipping pages manually 
         scrollArrow.addEventListener('click', () => {
             const cards = Array.from(document.querySelectorAll('.quote-card'));
             const currentIndex = cards.findIndex(card => card.classList.contains('active'));
@@ -518,7 +534,6 @@
             }
         });
 
-        // Theme reconfiguration system triggers
         document.querySelectorAll('.palette-option').forEach(btn => {
             btn.addEventListener('click', () => {
                 activeTheme = btn.getAttribute('data-theme');
