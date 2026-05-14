@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Brutalist Audio Processor</title>
+    <style>
+        :root {
+            --bg: #FFDE4D;
+            --card-bg: #FFFFFF;
+            --accent: #FF5A5F;
+            --accent-secondary: #38A3A5;
+            --text: #000000;
+            --border-thick: 4px solid #000000;
+            --shadow-main: 8px 8px 0px #000000;
+            --shadow-btn: 4px 4px 0px #000000;
+            --shadow-btn-active: 1px 1px 0px #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 900;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .player-card {
+            background: var(--card-bg);
+            border: var(--border-thick);
+            box-shadow: var(--shadow-main);
+            padding: 30px;
+            width: 100%;
+            max-width: 440px;
+        }
+
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            border-bottom: var(--border-thick);
+            padding-bottom: 10px;
+        }
+
+        .file-name {
+            background: #F0F0F0;
+            border: var(--border-thick);
+            padding: 10px;
+            font-size: 14px;
+            margin-bottom: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 25px;
+        }
+
+        .file-label {
+            display: block;
+            background: var(--accent-secondary);
+            border: var(--border-thick);
+            box-shadow: var(--shadow-btn);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+
+        .file-label:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+
+        .file-label:active {
+            transform: translate(3px, 3px);
+            box-shadow: var(--shadow-btn-active);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            flex: 1;
+            background: var(--accent);
+            border: var(--border-thick);
+            color: #000000;
+            padding: 15px;
+            font-size: 18px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--shadow-btn);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+
+        button:active:not(:disabled) {
+            transform: translate(3px, 3px);
+            box-shadow: var(--shadow-btn-active);
+        }
+
+        button:disabled {
+            background: #D3D3D3;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slider-group {
+            margin-bottom: 25px;
+            border: var(--border-thick);
+            padding: 15px;
+            background: #FFFFFF;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .slider-val {
+            background: #000000;
+            color: #FFFFFF;
+            padding: 2px 8px;
+        }
+
+        /* Neo-Brutalist Range Inputs */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: #000000;
+            height: 8px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--bg);
+            border: 3px solid #000000;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--bg);
+            border: 3px solid #000000;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .timeline-group {
+            background: #000000;
+        }
+
+        .timeline-group .slider-header {
+            color: #FFFFFF;
+        }
+
+        .timeline-group input[type="range"] {
+            background: #FFFFFF;
+        }
+
+        .timeline-group input[type="range"]::-webkit-slider-thumb {
+            background: var(--accent);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #FFFFFF;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="player-card">
+    <h2>AUDIO FX NODE</h2>
+    <div class="file-name" id="fileName">STATUS: NO FILE LOADED</div>
+
+    <div class="file-input-wrapper">
+        <label class="file-label" for="audioFile">LOAD AUDIO FILE</label>
+        <input type="file" id="audioFile" accept="audio/*">
+    </div>
+
+    <div class="controls-row">
+        <button id="playBtn" disabled>PLAY</button>
+        <button id="stopBtn" disabled>STOP</button>
+    </div>
+
+    <!-- Timeline Slider -->
+    <div class="slider-group timeline-group">
+        <input type="range" id="timeline" min="0" max="100" value="0" step="0.1" disabled>
+        <div class="time-display">
+            <span id="currTime">0:00</span>
+            <span id="durTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- Tempo Slider -->
+    <div class="slider-group">
+        <div class="slider-header">
+            <span>TEMPO (STRETCH)</span>
+            <span class="slider-val" id="tempoVal">1.00x</span>
+        </div>
+        <input type="range" id="tempoSlider" min="0.5" max="2.0" value="1.0" step="0.05">
+    </div>
+
+    <!-- Pitch Slider -->
+    <div class="slider-group">
+        <div class="slider-header">
+            <span>PITCH (SEMITONE)</span>
+            <span class="slider-val" id="pitchVal">0</span>
+        </div>
+        <input type="range" id="pitchSlider" min="-12" max="12" value="0" step="1">
+    </div>
+
+    <!-- Speed Slider -->
+    <div class="slider-group">
+        <div class="slider-header">
+            <span>RESAMPLE (VINYL)</span>
+            <span class="slider-val" id="speedVal">1.00x</span>
+        </div>
+        <input type="range" id="speedSlider" min="0.5" max="2.0" value="1.0" step="0.05">
+    </div>
+</div>
+
+<script>
+    let audioCtx = null;
+    let audioBuffer = null;
+    let sourceNode = null;
+    
+    let isPlaying = false;
+    let startTime = 0; 
+    let pausedAt = 0; 
+    let duration = 0;
+    let progressInterval = null;
+
+    const fileInput = document.getElementById('audioFile');
+    const fileName = document.getElementById('fileName');
+    const playBtn = document.getElementById('playBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const timeline = document.getElementById('timeline');
+    const currTimeTxt = document.getElementById('currTime');
+    const durTimeTxt = document.getElementById('durTime');
+    
+    const tempoSlider = document.getElementById('tempoSlider');
+    const tempoVal = document.getElementById('tempoVal');
+    const pitchSlider = document.getElementById('pitchSlider');
+    const pitchVal = document.getElementById('pitchVal');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedVal = document.getElementById('speedVal');
+
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        fileName.textContent = `SRC: ${file.name.toUpperCase()}`;
+        stopPlayback();
+        
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        
+        try {
+            audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            duration = audioBuffer.duration;
+            durTimeTxt.textContent = formatTime(duration);
+            timeline.max = duration;
+            timeline.disabled = false;
+            playBtn.disabled = false;
+            stopBtn.disabled = false;
+            resetParameters();
+        } catch (err) {
+            alert('DECODING ERROR.');
+        }
+    });
+
+    playBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            pausePlayback();
+        } else {
+            startPlayback(pausedAt);
+        }
+    });
+
+    stopBtn.addEventListener('click', stopPlayback);
+
+    timeline.addEventListener('input', () => {
+        clearInterval(progressInterval);
+        currTimeTxt.textContent = formatTime(timeline.value);
+    });
+
+    timeline.addEventListener('change', () => {
+        pausedAt = parseFloat(timeline.value);
+        if (isPlaying) {
+            stopEngine();
+            startPlayback(pausedAt);
+        }
+    });
+
+    tempoSlider.addEventListener('input', (e) => {
+        tempoVal.textContent = parseFloat(e.target.value).toFixed(2) + 'x';
+        updateAudioEngine();
+    });
+
+    pitchSlider.addEventListener('input', (e) => {
+        pitchVal.textContent = e.target.value > 0 ? `+${e.target.value}` : e.target.value;
+        updateAudioEngine();
+    });
+
+    speedSlider.addEventListener('input', (e) => {
+        speedVal.textContent = parseFloat(e.target.value).toFixed(2) + 'x';
+        updateAudioEngine();
+    });
+
+    function startPlayback(resumePosition = 0) {
+        if (!audioBuffer) return;
+        
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        sourceNode = audioCtx.createBufferSource();
+        sourceNode.buffer = audioBuffer;
+
+        applyDSP();
+
+        sourceNode.connect(audioCtx.destination);
+        if (resumePosition >= duration) resumePosition = 0;
+        
+        sourceNode.start(0, resumePosition);
+        
+        isPlaying = true;
+        playBtn.textContent = 'PAUSE';
+        startTime = audioCtx.currentTime - (resumePosition / getCombinedPlaybackRate());
+        pausedAt = resumePosition;
+
+        startProgressTimer();
+    }
+
+    function stopEngine() {
+        if (sourceNode) {
+            try { sourceNode.stop(); } catch(e) {}
+            sourceNode.disconnect();
+            sourceNode = null;
+        }
+    }
+
+    function pausePlayback() {
+        if (!isPlaying) return;
+        isPlaying = false;
+        playBtn.textContent = 'PLAY';
+        clearInterval(progressInterval);
+        pausedAt = parseFloat(timeline.value);
+        stopEngine();
+    }
+
+    function stopPlayback() {
+        isPlaying = false;
+        playBtn.textContent = 'PLAY';
+        clearInterval(progressInterval);
+        stopEngine();
+        pausedAt = 0;
+        timeline.value = 0;
+        currTimeTxt.textContent = "0:00";
+    }
+
+    function applyDSP() {
+        if (!sourceNode) return;
+
+        const tempo = parseFloat(tempoSlider.value);
+        const pitchSemitones = parseInt(pitchSlider.value);
+        const resamplingSpeed = parseFloat(speedSlider.value);
+
+        const pitchRatio = Math.pow(2, pitchSemitones / 12);
+        const dynamicPlaybackRate = pitchRatio * resamplingSpeed;
+        
+        sourceNode.playbackRate.value = dynamicPlaybackRate;
+        sourceNode.detune.value = (pitchSemitones * 100) - (Math.log2(tempo) * 1200);
+        sourceNode.playbackRate.value = dynamicPlaybackRate * (tempo / pitchRatio);
+    }
+
+    function updateAudioEngine() {
+        if (!isPlaying) return;
+        const currentPos = parseFloat(timeline.value);
+        stopEngine();
+        startPlayback(currentPos);
+    }
+
+    function getCombinedPlaybackRate() {
+        const tempo = parseFloat(tempoSlider.value);
+        const speed = parseFloat(speedSlider.value);
+        return tempo * speed;
+    }
+
+    function startProgressTimer() {
+        clearInterval(progressInterval);
+        progressInterval = setInterval(() => {
+            if (!isPlaying) return;
+            
+            const elapsed = (audioCtx.currentTime - startTime) * getCombinedPlaybackRate();
+            timeline.value = elapsed;
+            currTimeTxt.textContent = formatTime(elapsed);
+
+            if (elapsed >= duration) {
+                stopPlayback();
+            }
+        }, 100);
+    }
+
+    function resetParameters() {
+        tempoSlider.value = 1.0;
+        tempoVal.textContent = "1.00x";
+        pitchSlider.value = 0;
+        pitchVal.textContent = "0";
+        speedSlider.value = 1.0;
+        speedVal.textContent = "1.00x";
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+</script>
+
+</body>
+</html>
