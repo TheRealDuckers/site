@@ -35,14 +35,13 @@
             padding: 40px;
         }
 
-        /* Optimized Desktop Dashboard Layout */
         .player-card {
             background: var(--card-bg);
             border: var(--border-thick);
             box-shadow: var(--shadow-main);
             padding: 40px;
             width: 100%;
-            max-width: 900px; /* Expanded for desktop */
+            max-width: 900px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
@@ -152,6 +151,10 @@
             transform: none;
         }
 
+        .export-btn {
+            background: var(--accent-green);
+        }
+
         .slider-group {
             border: var(--border-thick);
             padding: 15px;
@@ -180,7 +183,6 @@
             margin-top: 8px;
         }
 
-        /* Numeric adjustments for desktop precision */
         .fine-tune-btn {
             background: #FFF;
             box-shadow: 2px 2px 0px #000;
@@ -201,7 +203,6 @@
             box-shadow: 1px 1px 0px #000;
         }
 
-        /* Neo-Brutalist Range Inputs */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -232,7 +233,6 @@
             border-radius: 0;
         }
 
-        /* Timeline Spans Entire Base */
         .timeline-container {
             grid-column: 1 / -1;
             background: #000000;
@@ -262,7 +262,7 @@
 
 <div class="player-card">
     <div class="header-section">
-        <h2>Music Player</h2>
+        <h2>DESKTOP AUDIO LAB</h2>
         <div class="system-status" id="sysStatus">DSP: OFFLINE</div>
     </div>
 
@@ -280,7 +280,11 @@
             <button id="stopBtn" disabled>STOP</button>
         </div>
 
-        <!-- Volume Module (New Control) -->
+        <div class="controls-row">
+            <button id="exportBtn" class="export-btn" disabled>EXPORT WAV</button>
+        </div>
+
+        <!-- Volume Module -->
         <div class="slider-group">
             <div class="slider-header">
                 <span>MASTER VOLUME</span>
@@ -296,7 +300,7 @@
 
     <!-- Right Column: Extended Range Parameters -->
     <div class="right-column">
-        <!-- Tempo Slider: Expanded Range (0.25x - 4.00x) -->
+        <!-- Tempo Slider -->
         <div class="slider-group">
             <div class="slider-header">
                 <span>TEMPO (TIME STRETCH)</span>
@@ -309,7 +313,7 @@
             </div>
         </div>
 
-        <!-- Pitch Slider: Expanded Range (-24 to +24 Semitones) -->
+        <!-- Pitch Slider -->
         <div class="slider-group">
             <div class="slider-header">
                 <span>PITCH ALTERATION (SEMITONES)</span>
@@ -322,7 +326,7 @@
             </div>
         </div>
 
-        <!-- Speed Slider: Expanded Range (0.25x - 4.00x) -->
+        <!-- Speed Slider -->
         <div class="slider-group">
             <div class="slider-header">
                 <span>RESAMPLE RATE (VINYL MODE)</span>
@@ -353,20 +357,21 @@
     let audioCtx = null;
     let audioBuffer = null;
     let sourceNode = null;
-    let gainNode = null; // Master Volume Node
+    let gainNode = null;
     
     let isPlaying = false;
     let startTime = 0; 
     let pausedAt = 0; 
     let duration = 0;
     let progressInterval = null;
+    let loadedFileName = "processed_track";
 
-    // DOM References
     const fileInput = document.getElementById('audioFile');
     const fileName = document.getElementById('fileName');
     const sysStatus = document.getElementById('sysStatus');
     const playBtn = document.getElementById('playBtn');
     const stopBtn = document.getElementById('stopBtn');
+    const exportBtn = document.getElementById('exportBtn');
     const timeline = document.getElementById('timeline');
     const currTimeTxt = document.getElementById('currTime');
     const durTimeTxt = document.getElementById('durTime');
@@ -380,7 +385,6 @@
     const speedSlider = document.getElementById('speedSlider');
     const speedVal = document.getElementById('speedVal');
 
-    // Global step handling utility for precise desktop increments
     window.adjust = function(id, amount) {
         const input = document.getElementById(id);
         const nextVal = parseFloat(input.value) + amount;
@@ -395,6 +399,7 @@
         const file = e.target.files[0];
         if (!file) return;
 
+        loadedFileName = file.name.split('.').slice(0, -1).join('.') || "processed_track";
         fileName.textContent = `FILE: ${file.name.toUpperCase()}`;
         stopPlayback();
         
@@ -413,6 +418,7 @@
             timeline.disabled = false;
             playBtn.disabled = false;
             stopBtn.disabled = false;
+            exportBtn.disabled = false;
             sysStatus.textContent = "DSP: READY";
             resetParameters();
         } catch (err) {
@@ -430,8 +436,8 @@
     });
 
     stopBtn.addEventListener('click', stopPlayback);
+    exportBtn.addEventListener('click', exportProcessedAudio);
 
-    // Continuous timeline interaction routines
     timeline.addEventListener('input', () => {
         clearInterval(progressInterval);
         currTimeTxt.textContent = formatTime(timeline.value);
@@ -445,7 +451,6 @@
         }
     });
 
-    // Event loops mapped with tighter granular precision steps
     volumeSlider.addEventListener('input', (e) => {
         volVal.textContent = e.target.value + '%';
         if (gainNode && audioCtx) {
@@ -481,7 +486,7 @@
         sourceNode.buffer = audioBuffer;
         gainNode.gain.setValueAtTime(volumeSlider.value / 100, audioCtx.currentTime);
 
-        applyDSP();
+        applyDSP(sourceNode, parseFloat(tempoSlider.value), parseInt(pitchSlider.value), parseFloat(speedSlider.value));
 
         sourceNode.connect(gainNode);
         gainNode.connect(audioCtx.destination);
@@ -532,19 +537,15 @@
         currTimeTxt.textContent = "0:00.00";
     }
 
-    function applyDSP() {
-        if (!sourceNode) return;
-
-        const tempo = parseFloat(tempoSlider.value);
-        const pitchSemitones = parseInt(pitchSlider.value);
-        const resamplingSpeed = parseFloat(speedSlider.value);
+    function applyDSP(node, tempo, pitchSemitones, resamplingSpeed) {
+        if (!node) return;
 
         const pitchRatio = Math.pow(2, pitchSemitones / 12);
         const dynamicPlaybackRate = pitchRatio * resamplingSpeed;
         
-        sourceNode.playbackRate.value = dynamicPlaybackRate;
-        sourceNode.detune.value = (pitchSemitones * 100) - (Math.log2(tempo) * 1200);
-        sourceNode.playbackRate.value = dynamicPlaybackRate * (tempo / pitchRatio);
+        node.playbackRate.value = dynamicPlaybackRate;
+        node.detune.value = (pitchSemitones * 100) - (Math.log2(tempo) * 1200);
+        node.playbackRate.value = dynamicPlaybackRate * (tempo / pitchRatio);
     }
 
     function updateAudioEngine() {
@@ -570,7 +571,118 @@
             if (elapsed >= duration) {
                 stopPlayback();
             }
-        }, 30); // Higher desktop refresh frequency update
+        }, 30);
+    }
+
+    // Offline Render Pipeline for File Export
+    async function exportProcessedAudio() {
+        if (!audioBuffer) return;
+
+        const tempo = parseFloat(tempoSlider.value);
+        const speed = parseFloat(speedSlider.value);
+        const pitch = parseInt(pitchSlider.value);
+        const volume = parseFloat(volumeSlider.value) / 100;
+
+        // Calculate precise target duration scaled by playback rates
+        const combinedRate = tempo * speed;
+        const renderDuration = duration / combinedRate;
+
+        sysStatus.textContent = "DSP: EXPORTING...";
+        exportBtn.disabled = true;
+
+        // Init target high-fidelity context matrix
+        const offlineCtx = new OfflineAudioContext(
+            audioBuffer.numberOfChannels,
+            audioBuffer.sampleRate * renderDuration,
+            audioBuffer.sampleRate
+        );
+
+        const offlineSource = offlineCtx.createBufferSource();
+        const offlineGain = offlineCtx.createGain();
+
+        offlineSource.buffer = audioBuffer;
+        offlineGain.gain.setValueAtTime(volume, 0);
+
+        // Apply matching DSP configurations onto the offline context
+        applyDSP(offlineSource, tempo, pitch, speed);
+
+        offlineSource.connect(offlineGain);
+        offlineGain.connect(offlineCtx.destination);
+        offlineSource.start(0);
+
+        try {
+            const renderedBuffer = await offlineCtx.startRendering();
+            const wavBlob = bufferToWav(renderedBuffer);
+            
+            // Build down-stream asset anchor link target
+            const url = URL.createObjectURL(wavBlob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = `${loadedFileName}_processed.wav`;
+            anchor.click();
+            
+            // Garbage disposal maintenance 
+            URL.revokeObjectURL(url);
+            sysStatus.textContent = "DSP: EXPORTED";
+        } catch (err) {
+            sysStatus.textContent = "DSP: EXPORT ERROR";
+            alert("Render pipeline failed.");
+        } finally {
+            exportBtn.disabled = false;
+        }
+    }
+
+    // Pure JavaScript AudioBuffer to 16-Bit Stereo WAV encoder
+    function bufferToWav(buffer) {
+        const numOfChan = buffer.numberOfChannels;
+        const length = buffer.length * numOfChan * 2 + 44;
+        const bufferArr = new ArrayBuffer(length);
+        const view = new DataView(bufferArr);
+        const channels = [];
+        let offset = 0;
+        let pos = 0;
+
+        // Write WAV Container Headers
+        setUint32(0x46464952); // "RIFF"
+        setUint32(length - 8); // file length - 8
+        setUint32(0x45564157); // "WAVE"
+        setUint32(0x20746d66); // "fmt " chunk
+        setUint32(16);         // chunk length
+        setUint16(1);          // sample format (raw PCM)
+        setUint16(numOfChan);
+        setUint32(buffer.sampleRate);
+        setUint32(buffer.sampleRate * numOfChan * 2); // byte rate
+        setUint16(numOfChan * 2);                     // block align
+        setUint16(16);                                // bits per sample
+        setUint32(0x61746164);                        // "data" chunk
+        setUint32(length - pos - 4);                  // chunk length
+
+        // Interleave Multi-Channel Intersections
+        for (let i = 0; i < numOfChan; i++) {
+            channels.push(buffer.getChannelData(i));
+        }
+
+        while (pos < buffer.length) {
+            for (let i = 0; i < numOfChan; i++) {
+                let sample = Math.max(-1, Math.min(1, channels[i][pos]));
+                // Convert floating point registers cleanly to 16-bit signed PCM integers
+                sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                view.setInt16(44 + offset, sample, true);
+                offset += 2;
+            }
+            pos++;
+        }
+
+        return new Blob([bufferArr], { type: 'audio/wav' });
+
+        function setUint16(data) {
+            view.setUint16(pos, data, true);
+            pos += 2;
+        }
+        function setUint32(data) {
+            view.setUint32(pos, data, true);
+            pos += 4;
+        }
     }
 
     function resetParameters() {
