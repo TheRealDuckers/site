@@ -6,150 +6,274 @@
     <title>The Musical Duck</title>
     <style>
         :root {
-            --bg-color: #0d0e12;
-            --card-bg: #181a20;
-            --text-main: #ffffff;
-            --text-dim: #a0a5b5;
-            --bandlab-red: #e02424;
+            --bg-color: #FFFDF0;      /* Soft Cream */
+            --border-color: #1A1A1A;  /* Bold Dark Border */
+            --text-color: #1A1A1A;
+            --accent-pink: #FFD1DC;   /* Pastel Pink */
+            --accent-blue: #C4E0E5;   /* Pastel Blue */
+            --accent-yellow: #FFF275; /* Pastel Yellow */
+            --accent-purple: #E8D7F1; /* Pastel Purple */
+            --accent-green: #D4EDDA;  /* Pastel Green */
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px;
         }
 
         .container {
             width: 100%;
-            max-width: 400px;
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 32px 24px;
+            max-width: 450px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .pfp-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
+        /* Profile Section */
+        .profile {
+            margin-bottom: 35px;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            background-color: var(--accent-yellow);
+            border: 4px solid var(--border-color);
             border-radius: 50%;
-            border: 3px solid var(--bandlab-red);
-            background: #252833;
-            overflow: hidden;
+            margin: 0 auto 16px;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 55px;
+            box-shadow: 6px 6px 0px var(--border-color);
         }
 
-        .pfp-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .pfp-placeholder {
-            color: var(--text-dim);
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        h1 {
-            font-size: 26px;
-            font-weight: 700;
+        .username {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            -webkit-text-stroke: 1px var(--border-color);
+            color: var(--text-color);
         }
 
         .bio {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-bottom: 32px;
-            line-height: 1.5;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            background: var(--accent-purple);
+            padding: 8px 12px;
+            border: 3px solid var(--border-color);
+            box-shadow: 4px 4px 0px var(--border-color);
+            display: inline-block;
+            margin-top: 5px;
         }
 
-        .links-list {
+        /* Links Section */
+        .links-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
+            margin-top: 10px;
         }
 
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            border-radius: 14px;
+        .link-card {
+            color: var(--text-color);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            transition: transform 0.2s, filter 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 18px;
+            border-radius: 0px; /* Sharp, bold look */
+            font-size: 1.2rem;
+            border: 4px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            display: block;
+            text-align: center;
+            width: 100%;
         }
 
-        .btn:active {
-            transform: scale(0.98);
+        /* Distinct Pastel Colors for Buttons */
+        .btn-bandlab { background-color: var(--accent-pink); box-shadow: 6px 6px 0px var(--border-color); }
+        .btn-song1 { background-color: var(--accent-blue); box-shadow: 6px 6px 0px var(--border-color); }
+        .btn-song2 { background-color: var(--accent-yellow); box-shadow: 6px 6px 0px var(--border-color); }
+        .btn-extra { background-color: var(--accent-green); box-shadow: 6px 6px 0px var(--border-color); }
+
+        .link-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--border-color);
         }
 
-        .btn-bandlab {
-            background-color: var(--bandlab-red);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(224, 36, 36, 0.3);
+        .link-card:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px var(--border-color);
         }
 
-        .btn-bandlab:hover {
-            filter: brightness(1.1);
+        /* Popup / Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            padding: 20px;
         }
 
-        .btn-secondary {
-            background-color: #252833;
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .btn-secondary:hover {
-            filter: brightness(1.2);
+        .modal-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border: 4px solid var(--border-color);
+            box-shadow: 10px 10px 0px var(--border-color);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--accent-purple);
+            border-bottom: 4px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            background: #ffffff;
+            border: 3px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        .close-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--border-color);
+        }
+
+        .iframe-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            display: block;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Profile Picture Space -->
-        <div class="pfp-container">
-            <!-- Place your profile picture image file path here -->
-            <img src="https://bl-prod-images.azureedge.net/v1.0/users/cab9092d-f9ea-4445-a0a5-012715497aa4/130x130" alt="The Musical Duck" onerror="this.style.display='none';">
-            <span class="pfp-placeholder"></span>
-        </div>
+        <!-- Profile Header -->
+        <header class="profile">
+            <img class="avatar" src="https://bl-prod-images.azureedge.net/v1.0/users/cab9092d-f9ea-4445-a0a5-012715497aa4/130x130">
+            <h1 class="username">The Musical Duck</h1>
+            <p class="bio">🎵 QUACKING OUT THE BEATS 🎵</p>
+        </header>
 
-        <!-- Artist Info -->
-        <h1>The Musical Duck</h1>
-        <p class="bio">Hey! Just a musical duck here :)</p>
+        <!-- Navigation Links -->
+        <main class="links-wrapper">
+            <!-- Primary BandLab Profile Link -->
+            <a href="https://www.bandlab.com/the_musical_duck" target="_blank" class="link-card btn-bandlab">
+                Follow on BandLab
+            </a>
 
-        <!-- Links -->
-        <div class="links-list">
-            <a href="https://www.bandlab.com/the_musical_duck" target="_blank" class="btn btn-bandlab">
-                BandLab
+            <!-- Song 1 (Triggers Popup) -->
+            <button class="link-card btn-song1" onclick="openPlayer('Tidal', 'https://www.bandlab.com/embed/?id=7d38c162-d1f8-416f-8a4d-389d456c75ca')">
+                🌊 Listen to my new song Tidal
+            </button>
+
+            <!-- Song 2 (Triggers Popup) -->
+            <button class="link-card btn-song2" onclick="openPlayer('Get into the Groove', 'https://www.bandlab.com/embed/?id=3e7edd78-0b6c-4702-8aa2-1a0d719acec1')">
+               🕺 Listen to Get into the Groove (demo)
+            </button>
+
+            <!-- Extra Social Link -->
+            <a href="https://duckers.dev" target="_blank" class="link-card btn-extra">
+                My Dev Site
             </a>
-            <a href="https://www.bandlab.com/the_musical_duck/gear" class="btn btn-secondary">
-                My Gear
-            </a>
-            <a href="mailto:quack@duckers.dev" class="btn btn-secondary">
-                Contact & Collaborations
-            </a>
+        </main>
+    </div>
+
+    <!-- Embedded Player Popup Modal -->
+    <div class="modal-overlay" id="playerModal" onclick="closePlayer(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="modal-title" id="trackTitle">Song Title</span>
+                <button class="close-btn" onclick="closePlayer(event)">&times;</button>
+            </div>
+            <div class="iframe-container">
+                <iframe id="bandlabEmbed" src="" allowfullscreen allow="autoplay"></iframe>
+            </div>
         </div>
     </div>
+
+    <script>
+        const modal = document.getElementById('playerModal');
+        const iframe = document.getElementById('bandlabEmbed');
+        const trackTitle = document.getElementById('trackTitle');
+
+        function openPlayer(title, embedUrl) {
+            trackTitle.textContent = title;
+            iframe.src = embedUrl;
+            modal.classList.add('active');
+        }
+
+        function closePlayer(event) {
+            modal.classList.remove('active');
+            iframe.src = ''; 
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePlayer();
+        });
+    </script>
 
 </body>
 </html>
