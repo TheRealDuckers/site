@@ -3,28 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Text</title>
+    <title>Infinite Overload</title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
             background-color: #000;
             color: #fff;
-            font-family: sans-serif;
             overflow-x: hidden;
+            font-weight: 900;
         }
-        body {
-            padding: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            gap: 8px;
-        }
+        
         span {
-            display: inline-block;
+            position: absolute;
             white-space: nowrap;
             line-height: 1;
-            transition: transform 0.2s;
+            pointer-events: none;
+            transform-origin: center;
+            animation: pulse-glitch 0.15s infinite alternate;
+        }
+
+        /* Glitch pixelation and color flashing animation */
+        @keyframes pulse-glitch {
+            0% {
+                filter: contrast(200%) hue-rotate(0deg) drop-shadow(2px 2px #ff0055);
+                transform: translate(-50%, -50%) skewX(0deg);
+            }
+            50% {
+                filter: contrast(150%) hue-rotate(180deg) drop-shadow(-2px -2px #00ffcc) blur(0.5px);
+                transform: translate(-48%, -52%) skewX(10deg);
+            }
+            100% {
+                filter: contrast(300%) hue-rotate(360deg) drop-shadow(3px -1px #9900ff);
+                transform: translate(-52%, -48%) skewX(-10deg);
+            }
         }
     </style>
 </head>
@@ -32,45 +46,109 @@
 
     <script>
         const phrase = "Kymbat Gayzleman";
-        const sizes = ["0.8rem", "1.2rem", "1.8rem", "2.5rem", "3.5rem", "4.5rem"];
-        const weights = ["300", "400", "700", "900"];
-        const opacities = ["0.3", "0.5", "0.8", "1"];
+        
+        const fonts = [
+            "Arial, sans-serif", 
+            "'Courier New', monospace", 
+            "Impact, Charcoal, sans-serif", 
+            "Arial Black, Gadget, sans-serif",
+            "'Trebuchet MS', sans-serif"
+        ];
+        
+        const colors = [
+            "#ff0055", "#00ffcc", "#9900ff", "#ffcc00", 
+            "#00ff22", "#0066ff", "#ffffff", "#ff5500", 
+            "#ff00ff", "#00ffff", "#ffff00"
+        ];
 
-        function appendItems() {
-            // Adds elements in small batches to maintain optimal performance
+        let currentY = 0;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const activeElements = [];
+
+        function spawnBatch() {
             const fragment = document.createDocumentFragment();
-            for (let i = 0; i < 150; i++) {
-                const el = document.createElement('span');
-                el.textContent = phrase + " ";
-                
-                // Randomise visual properties
-                el.style.fontSize = sizes[Math.floor(Math.random() * sizes.length)];
-                el.style.fontWeight = weights[Math.floor(Math.random() * weights.length)];
-                el.style.opacity = opacities[Math.floor(Math.random() * opacities.length)];
-                
-                fragment.appendChild(el);
-            }
-            document.body.appendChild(fragment);
-        }
-
-        // Initial populate loop to ensure content exceeds viewport height
-        while (document.body.offsetHeight < window.innerHeight * 3) {
-            appendItems();
-        }
-
-        // Constant automatic downward scrolling loop
-        function autoScroll() {
-            window.scrollBy(0, 2); 
             
-            // Generate more text elements before hitting the bottom border
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - window.innerHeight) {
-                appendItems();
+            for (let i = 0; i < 40; i++) {
+                const el = document.createElement('span');
+                el.textContent = phrase;
+                
+                // Random position generation
+                const randomX = Math.random() * viewportWidth;
+                const randomY = currentY + (Math.random() * viewportHeight);
+                el.style.left = `${randomX}px`;
+                el.style.top = `${randomY}px`;
+                
+                // Varied custom styles
+                el.style.fontSize = `${Math.random() * (5.5 - 1) + 1}rem`;
+                el.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+                el.style.opacity = Math.random() * (1 - 0.4) + 0.4;
+                
+                // Speed and drift vectors for animation loop
+                const driftData = {
+                    element: el,
+                    baseX: randomX,
+                    driftSpeedX: (Math.random() * 2 - 1) * 1.5, 
+                    driftSpeedY: (Math.random() * 2 - 1) * 0.5,
+                    angle: Math.random() * Math.PI * 2,
+                    angleSpeed: (Math.random() * 0.02 - 0.01),
+                    rotation: (Math.random() * 360)
+                };
+
+                fragment.appendChild(el);
+                activeElements.push(driftData);
             }
-            requestAnimationFrame(autoScroll);
+            
+            document.body.appendChild(fragment);
+            currentY += viewportHeight;
+        }
+
+        // Build first block of layout space
+        while (currentY < viewportHeight * 3) {
+            spawnBatch();
+        }
+
+        // Processing loop for movement mechanics and generation triggers
+        function mainLoop() {
+            // Apply steady down-scroll velocity
+            window.scrollBy(0, 4); 
+            
+            // Calculate runtime drifting math for floating effects
+            for (let i = 0; i < activeElements.length; i++) {
+                const item = activeElements[i];
+                item.baseX += item.driftSpeedX;
+                item.angle += item.angleSpeed;
+                
+                // Keep spans looping smoothly within horizontal viewport bounds
+                if (item.baseX > viewportWidth + 200) item.baseX = -200;
+                if (item.baseX < -200) item.baseX = viewportWidth + 200;
+                
+                // Apply final compound spatial shifts
+                const currentX = item.baseX + Math.sin(item.angle) * 30;
+                item.element.style.left = `${currentX}px`;
+                
+                // Randomise animation speed intervals slightly for pure glitch offset
+                if (Math.random() > 0.98) {
+                    item.element.style.animationDuration = `${Math.random() * 0.2 + 0.05}s`;
+                }
+            }
+
+            // Clean up distant elements off-screen to safeguard memory performance
+            if (activeElements.length > 400) {
+                const old = activeElements.splice(0, 40);
+                old.forEach(item => item.element.remove());
+            }
+            
+            // Build more content buffers ahead of viewport view tracking
+            if (window.scrollY + (viewportHeight * 2) >= currentY) {
+                spawnBatch();
+            }
+            
+            requestAnimationFrame(mainLoop);
         }
         
-        // Start the infinite loop execution
-        autoScroll();
+        mainLoop();
     </script>
 </body>
 </html>
