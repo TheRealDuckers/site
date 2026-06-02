@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Text</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+            overflow-x: hidden;
+        }
+        body {
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+        }
+        span {
+            display: inline-block;
+            white-space: nowrap;
+            line-height: 1;
+            transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        const phrase = "Kymbat Gayzleman";
+        const sizes = ["0.8rem", "1.2rem", "1.8rem", "2.5rem", "3.5rem", "4.5rem"];
+        const weights = ["300", "400", "700", "900"];
+        const opacities = ["0.3", "0.5", "0.8", "1"];
+
+        function appendItems() {
+            // Adds elements in small batches to maintain optimal performance
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 150; i++) {
+                const el = document.createElement('span');
+                el.textContent = phrase + " ";
+                
+                // Randomise visual properties
+                el.style.fontSize = sizes[Math.floor(Math.random() * sizes.length)];
+                el.style.fontWeight = weights[Math.floor(Math.random() * weights.length)];
+                el.style.opacity = opacities[Math.floor(Math.random() * opacities.length)];
+                
+                fragment.appendChild(el);
+            }
+            document.body.appendChild(fragment);
+        }
+
+        // Initial populate loop to ensure content exceeds viewport height
+        while (document.body.offsetHeight < window.innerHeight * 3) {
+            appendItems();
+        }
+
+        // Constant automatic downward scrolling loop
+        function autoScroll() {
+            window.scrollBy(0, 2); 
+            
+            // Generate more text elements before hitting the bottom border
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - window.innerHeight) {
+                appendItems();
+            }
+            requestAnimationFrame(autoScroll);
+        }
+        
+        // Start the infinite loop execution
+        autoScroll();
+    </script>
+</body>
+</html>
