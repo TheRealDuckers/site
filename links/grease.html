@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>GREASE Countdown</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --red:#ff3b30;
+    --black:#000;
+    --white:#fff;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:var(--red);
+    font-family:Inter,sans-serif;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    padding:24px;
+}
+
+.bolt{
+    position:fixed;
+    inset:0;
+    display:grid;
+    place-items:center;
+    font-size:min(80vw,900px);
+    color:white;
+    opacity:.07;
+    pointer-events:none;
+    user-select:none;
+}
+
+.wrapper{
+    width:min(1200px,100%);
+    position:relative;
+    z-index:2;
+}
+
+.ticket{
+    background:white;
+    border:6px solid black;
+    box-shadow:14px 14px 0 black;
+    padding:40px;
+    position:relative;
+}
+
+.ticket:before,
+.ticket:after{
+    content:"";
+    position:absolute;
+    width:40px;
+    height:40px;
+    background:var(--red);
+    border:6px solid black;
+    border-radius:50%;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.ticket:before{
+    left:-26px;
+}
+
+.ticket:after{
+    right:-26px;
+}
+
+h1{
+    font-family:Anton,sans-serif;
+    font-size:clamp(4rem,12vw,8rem);
+    line-height:.9;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:32px;
+}
+
+.countdown{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.unit{
+    border:5px solid black;
+    background:var(--red);
+    color:white;
+    text-align:center;
+    padding:24px 12px;
+    box-shadow:8px 8px 0 black;
+}
+
+.unit:nth-child(1){transform:rotate(-2deg);}
+.unit:nth-child(2){transform:rotate(1deg);}
+.unit:nth-child(3){transform:rotate(-1deg);}
+.unit:nth-child(4){transform:rotate(2deg);}
+
+.value{
+    font-size:clamp(2.5rem,6vw,5rem);
+    font-weight:900;
+    line-height:1;
+}
+
+.label{
+    margin-top:10px;
+    text-transform:uppercase;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.footer{
+    margin-top:28px;
+    text-align:center;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:3px;
+}
+
+.finished{
+    text-align:center;
+    font-size:clamp(2rem,8vw,5rem);
+    font-weight:900;
+}
+
+@media (max-width:700px){
+
+    .ticket{
+        padding:24px;
+    }
+
+    .countdown{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .unit{
+        padding:18px 10px;
+    }
+
+    .label{
+        font-size:.7rem;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="bolt">⚡</div>
+
+<div class="wrapper">
+
+    <div class="ticket">
+
+        <h1>GREASE</h1>
+
+        <div class="subtitle">
+            Opening Night • 15 July 2026 • 7:30 PM
+        </div>
+
+        <div class="countdown" id="countdown">
+
+            <div class="unit">
+                <div class="value" id="days">0</div>
+                <div class="label">Days</div>
+            </div>
+
+            <div class="unit">
+                <div class="value" id="hours">0</div>
+                <div class="label">Hours</div>
+            </div>
+
+            <div class="unit">
+                <div class="value" id="minutes">0</div>
+                <div class="label">Minutes</div>
+            </div>
+
+            <div class="unit">
+                <div class="value" id="seconds">0</div>
+                <div class="label">Seconds</div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Grease Is The Word
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const targetDate = new Date("2026-07-15T19:30:00");
+
+function updateCountdown() {
+
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerHTML =
+            '<div class="finished">🎭 GREASE HAS STARTED 🎭</div>';
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = String(hours).padStart(2,"0");
+    document.getElementById("minutes").textContent = String(minutes).padStart(2,"0");
+    document.getElementById("seconds").textContent = String(seconds).padStart(2,"0");
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>
+
