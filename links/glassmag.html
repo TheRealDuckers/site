@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Glass Liquid Magnetic Grid</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 50%, #1a1a24 0%, #0d0d11 100%);
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Apple-inspired vivid background glow blobs */
+        .bg-glow-1 {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(138, 92, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -10%;
+            left: -10%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-glow-2 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -5%;
+            right: -5%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 24px;
+            z-index: 1;
+            padding: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* Apple tinted glassmorphic squares */
+        .square {
+            aspect-ratio: 1;
+            background: rgba(30, 30, 40, 0.4);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+            will-change: transform;
+        }
+
+        .square::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(80px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.06), transparent 80%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .square:hover::after {
+            opacity: 1;
+        }
+
+        
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="grid-container" id="grid"></div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        
+        // Configuration
+        const totalSquares = 48; 
+        const maxDisplacement = 35;  // Pull distance limits
+        const magneticRadius = 180;  // Radius where a square actively links to cursor
+
+        // Liquid Inertia Controls
+        const followEase = 0.08;     // Speed while actively following cursor (high = responsive)
+        const returnEase = 0.015;    // Speed while lazily sliding home (low = slow fade back)
+
+        // Generate squares
+        for (let i = 0; i < totalSquares; i++) {
+            const square = document.createElement('div');
+            square.classList.add('square');
+            grid.appendChild(square);
+        }
+
+        const squares = document.querySelectorAll('.square');
+        const squareData = [];
+
+        // Track data structures for continuous fluid rendering
+        squares.forEach((square) => {
+            const rect = square.getBoundingClientRect();
+            squareData.push({
+                element: square,
+                baseX: rect.left + rect.width / 2 + window.scrollX,
+                baseY: rect.top + rect.height / 2 + window.scrollY,
+                currentX: 0,
+                currentY: 0,
+                targetX: 0,
+                targetY: 0,
+                isFollowing: false // Dynamic tracking flag
+            });
+        });
+
+        // Recalculate anchors fluidly on resize
+        window.addEventListener('resize', () => {
+            squareData.forEach((data) => {
+                const rect = data.element.getBoundingClientRect();
+                data.baseX = rect.left + rect.width / 2 + window.scrollX;
+                data.baseY = rect.top + rect.height / 2 + window.scrollY;
+            });
+        });
+
+        let mouseX = -10000;
+        let mouseY = -10000;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX + window.scrollX;
+            mouseY = e.clientY + window.scrollY;
+
+            // Manage internal light variables and coordinate updates
+            squareData.forEach((data) => {
+                const rect = data.element.getBoundingClientRect();
+                const localX = e.clientX - rect.left;
+                const localY = e.clientY - rect.top;
+                data.element.style.setProperty('--mouse-x', `${localX}px`);
+                data.element.style.setProperty('--mouse-y', `${localY}px`);
+            });
+        });
+
+        // Reset target coordinates if mouse leaves screen bounds completely
+        window.addEventListener('mouseleave', () => {
+            mouseX = -10000;
+            mouseY = -10000;
+        });
+
+        // The physics engine blending magnetic attraction and slow decay mechanics
+        function updatePhysicsLoop() {
+            squareData.forEach((data) => {
+                // Measure actual live distance from cursor to anchor center
+                const deltaX = mouseX - data.baseX;
+                const deltaY = mouseY - data.baseY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                // Activation trigger: immediately switches state if touched or within boundary
+                if (distance < magneticRadius) {
+                    data.isFollowing = true;
+
+                    // Liquid magnetic scaling effect inside boundary
+                    const force = (magneticRadius - distance) / magneticRadius;
+                    const pull = force * maxDisplacement;
+                    const angle = Math.atan2(deltaY, deltaX);
+
+                    data.targetX = Math.cos(angle) * pull;
+                    data.targetY = Math.sin(angle) * pull;
+                } else {
+                    // Turn tracking mode off when threshold is breached
+                    data.isFollowing = false;
+                    data.targetX = 0;
+                    data.targetY = 0;
+                }
+
+                // Choose appropriate engine dampening speeds dynamically
+                // Prevents snapping when swapping between active tracking and drifting back home
+                const activeEase = data.isFollowing ? followEase : returnEase;
+
+                // Linearly interpolate positions to eradicate jerky tracking
+                data.currentX += (data.targetX - data.currentX) * activeEase;
+                data.currentY += (data.targetY - data.currentY) * activeEase;
+
+                // Render styles smoothly using hardware acceleration
+                data.element.style.transform = `translate3d(${data.currentX.toFixed(2)}px, ${data.currentY.toFixed(2)}px, 0px)`;
+            });
+
+            requestAnimationFrame(updatePhysicsLoop);
+        }
+
+        // Initialize engine loop
+        requestAnimationFrame(updatePhysicsLoop);
+    </script>
+</body>
+</html>
+
+
