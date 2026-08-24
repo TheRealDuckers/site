@@ -1,0 +1,78 @@
+(() => {
+  /* page transition overlay */
+  const transition = document.createElement("div");
+  transition.className = "page-transition";
+  document.body.appendChild(transition);
+
+  /* play enter animation on load */
+  requestAnimationFrame(() => transition.classList.add("enter"));
+
+  /* intercept all internal links for exit transition */
+  let transitioning = false;
+  document.addEventListener("click", (e) => {
+    if (transitioning) return;
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("http") || a.target === "_blank") return;
+    e.preventDefault();
+    transitioning = true;
+    document.body.classList.add("loading");
+    transition.classList.remove("enter");
+    transition.classList.add("exit");
+    setTimeout(() => { window.location.href = href; }, 350);
+  });
+
+  /* custom cursor */
+  const cursor = document.querySelector(".cursor");
+  if (cursor && window.matchMedia("(pointer: fine)").matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    document.addEventListener("mousemove", (e) => { tx = e.clientX; ty = e.clientY; });
+    (function loop() {
+      cx += (tx - cx) * 0.12;
+      cy += (ty - cy) * 0.12;
+      cursor.style.left = cx + "px";
+      cursor.style.top = cy + "px";
+      requestAnimationFrame(loop);
+    })();
+
+    document.addEventListener("mousedown", () => cursor.classList.add("click"));
+    document.addEventListener("mouseup", () => cursor.classList.remove("click"));
+
+    function bindHover() {
+      document.querySelectorAll("a, button, .tags span, .project-card").forEach((el) => {
+        el.addEventListener("mouseenter", () => cursor.classList.add("hover"));
+        el.addEventListener("mouseleave", () => cursor.classList.remove("hover"));
+      });
+    }
+    bindHover();
+  }
+
+  /* scroll reveal */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+  /* contact form */
+  const form = document.querySelector(".contact-form");
+  if (form) {
+    const status = document.getElementById("form-status");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (status) status.textContent = "sending...";
+      try {
+        const res = await fetch(form.action, { method: "POST", body: new FormData(form) });
+        const json = await res.json();
+        if (json.success) {
+          if (status) status.textContent = "sent. quack.";
+          form.reset();
+        } else {
+          if (status) status.textContent = "failed. try again.";
+        }
+      } catch {
+        if (status) status.textContent = "error. try again.";
+      }
+    });
+  }
+})();

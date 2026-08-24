@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Duckers Dev</title>
+  <meta name="description" content="Get in touch with Duckers — web developer and theatre tech engineer. Let's build something together.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Contact | Duckers Dev">
+  <meta property="og:description" content="Get in touch with Duckers.">
+  <meta property="og:url" content="https://duckers.dev/contact.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://duckers.dev/contact.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="cursor"></div>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">duckers</a>
+    <div class="nav-links">
+      <a href="projects.html">projects</a>
+      <a href="about.html">about</a>
+      <a href="contact.html" class="active">contact</a>
+    </div>
+  </nav>
+  <div class="page">
+    <p class="page-label reveal">/contact</p>
+    <h2 class="reveal reveal-d1">Let's Chat</h2>
+    <div class="contact-grid reveal reveal-d2">
+      <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+        <input type="hidden" name="subject" value="New message from duckers.dev">
+        <input type="hidden" name="from_name" value="Duckers Dev">
+        <input type="text" name="name" placeholder="name" required>
+        <input type="email" name="email" placeholder="email" required>
+        <textarea name="message" placeholder="message" rows="5" required></textarea>
+        <button type="submit">send</button>
+      </form>
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <span class="contact-info-label">Email</span>
+          <a href="mailto:quack@duckers.dev">quack@duckers.dev</a>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">GitHub</span>
+          <a href="https://github.com/TheRealDuckers" target="_blank">TheRealDuckers</a>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">Blog</span>
+          <a href="https://blog.duckers.dev" target="_blank">blog.duckers.dev</a>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">Hack Club</span>
+          <a href="https://hackclub.com" target="_blank">@Duckers on Slack</a>
+        </div>
+      </div>
+    </div>
+    <p id="form-status" class="form-status reveal reveal-d3"></p>
+  </div>
+  <footer class="footer">
+    <p>&copy; 2026 duckers dev. quack.</p>
+    <p><a href="https://github.com/TheRealDuckers">github</a> &middot; <a href="https://blog.duckers.dev">blog</a></p>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Duckers Dev | Web Developer & Theatre Tech</title>
-  <meta name="description" content="Duckers is a web developer and theatre tech engineer from the UK. Creator of WebCue, LyricShow, and theatre software tools. Hack Club member.">
+  <meta name="description" content="Duckers is a web developer and theatre tech engineer from the UK. Creator of WebCue, LyricShow, and theatre software tools.">
   <meta name="keywords" content="web developer, theatre tech, lighting design, QLab, QLC+, DMX, show control, Duckers, TheRealDuckers">
   <meta name="author" content="Duckers">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#059669">
-
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://duckers.dev/">
   <meta property="og:title" content="Duckers Dev | Web Developer & Theatre Tech">
@@ -17,164 +16,63 @@
   <meta property="og:image" content="https://duckers.dev/og-image.png">
   <meta property="og:locale" content="en_GB">
   <meta property="og:site_name" content="Duckers Dev">
-
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Duckers Dev | Web Developer & Theatre Tech">
   <meta name="twitter:description" content="Web developer and theatre tech engineer. Creator of WebCue and theatre software tools.">
   <meta name="twitter:image" content="https://duckers.dev/og-image.png">
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
   <link rel="canonical" href="https://duckers.dev/">
-
   <script type="application/ld+json">
   {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Duckers",
-      "alternateName": "TheRealDuckers",
-      "url": "https://duckers.dev/",
-      "email": "quack@duckers.dev",
-      "jobTitle": "Web Developer & Theatre Tech Engineer",
-      "knowsAbout": ["Web Development", "Theatre Technology", "Lighting Design", "Show Control", "WordPress", "Custom Platforms"],
-      "memberOf": {
-          "@type": "Organization",
-          "name": "Hack Club"
-      }
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Duckers",
+    "alternateName": "TheRealDuckers",
+    "url": "https://duckers.dev/",
+    "email": "quack@duckers.dev",
+    "jobTitle": "Web Developer & Theatre Tech Engineer",
+    "knowsAbout": ["Web Development","Theatre Technology","Lighting Design","Show Control","WordPress","Custom Platforms"],
+    "memberOf": { "@type": "Organization", "name": "Hack Club" }
   }
   </script>
-
   <script type="application/ld+json">
   {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Duckers Dev",
-      "url": "https://duckers.dev/",
-      "description": "Personal portfolio of Duckers — a web developer and theatre tech engineer. Creator of WebCue, LyricShow, and custom web platforms.",
-      "author": {
-          "@type": "Person",
-          "name": "Duckers",
-          "url": "https://duckers.dev/"
-      }
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Duckers Dev",
+    "url": "https://duckers.dev/",
+    "description": "Personal portfolio of Duckers — a web developer and theatre tech engineer.",
+    "author": { "@type": "Person", "name": "Duckers", "url": "https://duckers.dev/" }
   }
   </script>
-
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --black: #000; --white: #fff; --gray: #999; }
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-    body { font-family: "SF Mono","Fira Code","Cascadia Code","Consolas",monospace; background: var(--white); color: var(--black); min-height: 100vh; display: flex; flex-direction: column; line-height: 1; }
-    main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 10vh 8vw; gap: 16vh; }
-    section { position: relative; }
-    .label { font-size: 0.65rem; color: var(--gray); text-transform: lowercase; letter-spacing: 0.05em; margin-bottom: 2rem; }
-    #hero h1 { font-size: clamp(3rem,10vw,8rem); font-weight: 700; letter-spacing: -0.04em; line-height: 0.9; }
-    #hero .sub { font-size: clamp(3rem,10vw,8rem); font-weight: 200; letter-spacing: -0.04em; line-height: 0.9; color: var(--gray); }
-    .bio { font-size: clamp(1rem,2.5vw,1.5rem); font-weight: 400; line-height: 1.4; max-width: 28ch; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
-    .tags span { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 0.7rem; border: 1px solid var(--black); border-radius: 0; }
-    .project-list { display: flex; flex-direction: column; }
-    .project-item { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: baseline; padding: 1.5rem 0; border-bottom: 1px solid var(--black); text-decoration: none; color: var(--black); transition: padding-left 0.2s ease; }
-    .project-item:first-child { border-top: 1px solid var(--black); }
-    .project-item:hover { padding-left: 1rem; }
-    .project-name { font-size: clamp(1.2rem,3vw,2rem); font-weight: 600; }
-    .project-desc { font-size: 0.7rem; color: var(--gray); text-transform: lowercase; }
-    .project-arrow { font-size: 1.2rem; transition: transform 0.2s ease; }
-    .project-item:hover .project-arrow { transform: translateX(4px); }
-    #contact-btn { font-family: inherit; font-size: clamp(1.2rem,3vw,2rem); font-weight: 600; background: none; border: none; color: var(--black); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; padding: 0; transition: opacity 0.2s; }
-    #contact-btn:hover { opacity: 0.5; }
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; z-index: 100; }
-    .overlay.active { opacity: 1; visibility: visible; }
-    .popup { background: var(--white); padding: 3rem; width: min(90vw,400px); position: relative; }
-    .close-btn { position: absolute; top: 1rem; right: 1.2rem; font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--black); line-height: 1; }
-    .close-btn:hover { opacity: 0.5; }
-    #contact-form { display: flex; flex-direction: column; gap: 1rem; }
-    #contact-form input, #contact-form textarea { font-family: inherit; font-size: 0.85rem; padding: 0.8rem 0; border: none; border-bottom: 1px solid var(--black); background: transparent; color: var(--black); outline: none; resize: none; }
-    #contact-form input::placeholder, #contact-form textarea::placeholder { color: var(--gray); }
-    #contact-form button[type="submit"] { font-family: inherit; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 1rem; background: var(--black); color: var(--white); border: none; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s; }
-    #contact-form button[type="submit"]:hover { opacity: 0.7; }
-    .form-status { font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; min-height: 1em; }
-    footer { padding: 2rem 8vw; }
-    footer p { font-size: 0.6rem; color: var(--gray); text-transform: lowercase; letter-spacing: 0.05em; }
-    @media (max-width: 600px) { main { padding: 8vh 6vw; gap: 10vh; } .project-desc { display: none; } }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main>
-    <section id="hero">
-      <p class="label">/</p>
+  <div class="cursor"></div>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">duckers</a>
+    <div class="nav-links">
+      <a href="projects.html">projects</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="reveal">
       <h1>duckers</h1>
       <p class="sub">dev</p>
-    </section>
-    <section id="about">
-      <p class="label">/about</p>
-      <p class="bio">web dev & theatre tech.<br>uk based. builds tools.</p>
-      <div class="tags">
-        <span>js</span><span>html</span><span>css</span><span>qlab</span><span>qlc+</span><span>dmx</span><span>lighting</span><span>sound</span>
-      </div>
-    </section>
-    <section id="projects">
-      <p class="label">/projects</p>
-      <div class="project-list">
-        <a href="https://therealduckers.github.io/WebCue" target="_blank" class="project-item">
-          <span class="project-name">webcue</span>
-          <span class="project-desc">browser-based qlab alternative</span>
-          <span class="project-arrow">&rarr;</span>
-        </a>
-        <a href="https://blog.duckers.dev" target="_blank" class="project-item">
-          <span class="project-name">blog</span>
-          <span class="project-desc">thoughts on code & theatre</span>
-          <span class="project-arrow">&rarr;</span>
-        </a>
-        <a href="https://github.com/TheRealDuckers" target="_blank" class="project-item">
-          <span class="project-name">github</span>
-          <span class="project-desc">20 repos & counting</span>
-          <span class="project-arrow">&rarr;</span>
-        </a>
-      </div>
-    </section>
-    <section id="contact">
-      <p class="label">/contact</p>
-      <button id="contact-btn" aria-label="Open contact form">mail</button>
-    </section>
-  </main>
-  <div id="overlay" class="overlay" aria-hidden="true">
-    <div class="popup">
-      <button id="close-btn" class="close-btn" aria-label="Close">&times;</button>
-      <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="d509c513-318a-4ae6-a39d-4a9bd97cc468">
-        <input type="hidden" name="subject" value="New message from duckers.dev">
-        <input type="hidden" name="from_name" value="Duckers Dev">
-        <input type="text" name="name" placeholder="name" required>
-        <input type="email" name="email" placeholder="email" required>
-        <textarea name="message" placeholder="message" rows="4" required></textarea>
-        <button type="submit">send</button>
-      </form>
-      <p id="form-status" class="form-status"></p>
     </div>
-  </div>
-  <footer><p>&copy; 2026 duckers dev. quack.</p></footer>
-  <script>
-    (() => {
-      const btn = document.getElementById("contact-btn");
-      const overlay = document.getElementById("overlay");
-      const closeBtn = document.getElementById("close-btn");
-      const form = document.getElementById("contact-form");
-      const status = document.getElementById("form-status");
-      btn.addEventListener("click", () => { overlay.classList.add("active"); overlay.setAttribute("aria-hidden","false"); form.querySelector("input[name='name']").focus(); });
-      closeBtn.addEventListener("click", close);
-      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-      function close() { overlay.classList.remove("active"); overlay.setAttribute("aria-hidden","true"); }
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault(); status.textContent = "sending...";
-        try {
-          const res = await fetch(form.action, { method: "POST", body: new FormData(form) });
-          const json = await res.json();
-          if (json.success) { status.textContent = "sent. quack."; form.reset(); setTimeout(close, 1500); }
-          else { status.textContent = "failed. try again."; }
-        } catch { status.textContent = "error. try again."; }
-      });
-    })();
-  </script>
+    <div class="hero-links reveal reveal-d1">
+      <a href="projects.html">projects</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+  </section>
+  <footer class="footer">
+    <p>&copy; 2026 duckers dev. quack.</p>
+    <p><a href="https://github.com/TheRealDuckers">github</a> &middot; <a href="https://blog.duckers.dev">blog</a></p>
+  </footer>
+  <script src="js/main.js"></script>
 </body>
 </html>
