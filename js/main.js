@@ -61,8 +61,9 @@
   const buttonsGrid = document.getElementById("buttons-grid");
 
   const buttons = [
-    /* add your buttons here — format:
-       { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" } */
+    const buttons = [
+  { img: "duckers.gif", href: "https://duckers.dev", alt: "me :)" },
+];
   ];
 
   buttons.forEach((b) => {
