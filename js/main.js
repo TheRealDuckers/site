@@ -60,10 +60,6 @@
   const buttonsClose = document.getElementById("buttons-close");
   const buttonsGrid = document.getElementById("buttons-grid");
 
-  const buttons = [
-    { img: "duckers.gif", href: "https://duckers.dev", alt: "me :)" },
-];
-  ];
 
   buttons.forEach((b) => {
     const a = document.createElement("a");
