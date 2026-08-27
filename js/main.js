@@ -54,6 +54,38 @@
   }, { threshold: 0.1 });
   document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
+  /* 88x31 buttons */
+  const buttonsOpen = document.getElementById("buttons-open");
+  const buttonsOverlay = document.getElementById("buttons-overlay");
+  const buttonsClose = document.getElementById("buttons-close");
+  const buttonsGrid = document.getElementById("buttons-grid");
+
+  const buttons = [
+    /* add your buttons here — format:
+       { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" } */
+  ];
+
+  buttons.forEach((b) => {
+    const a = document.createElement("a");
+    a.href = b.href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.title = b.alt;
+    const img = document.createElement("img");
+    img.src = b.img;
+    img.alt = b.alt;
+    img.loading = "lazy";
+    a.appendChild(img);
+    buttonsGrid.appendChild(a);
+  });
+
+  if (buttonsOpen && buttonsOverlay) {
+    buttonsOpen.addEventListener("click", () => { buttonsOverlay.classList.add("active"); });
+    buttonsClose.addEventListener("click", () => { buttonsOverlay.classList.remove("active"); });
+    buttonsOverlay.addEventListener("click", (e) => { if (e.target === buttonsOverlay) buttonsOverlay.classList.remove("active"); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") buttonsOverlay.classList.remove("active"); });
+  }
+
   /* contact form */
   const form = document.querySelector(".contact-form");
   if (form) {
