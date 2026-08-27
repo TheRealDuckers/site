@@ -63,7 +63,7 @@
   const buttons = [
     /* add your real buttons here — format:
        { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" }
-       below are placeholders; replace or delete them. */,
+       below are placeholders; replace or delete them. */
     { href: "https://hackclub.com", alt: "Hack Club", text: "Hack Club" },
     { href: "https://therealduckers.github.io/WebCue", alt: "WebCue", text: "WebCue" },
     { href: "https://blog.duckers.dev", alt: "Blog", text: "Duckers Blog" },
