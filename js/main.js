@@ -61,8 +61,7 @@
   const buttonsGrid = document.getElementById("buttons-grid");
 
   const buttons = [
-    const buttons = [
-  { img: "duckers.gif", href: "https://duckers.dev", alt: "me :)" },
+    { img: "duckers.gif", href: "https://duckers.dev", alt: "me :)" },
 ];
   ];
 
