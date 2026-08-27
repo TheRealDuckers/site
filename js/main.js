@@ -61,8 +61,16 @@
   const buttonsGrid = document.getElementById("buttons-grid");
 
   const buttons = [
-    /* add your buttons here — format:
-       { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" } */
+    /* add your real buttons here — format:
+       { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" }
+       below are placeholders; replace or delete them. */,
+    { href: "https://hackclub.com", alt: "Hack Club", text: "Hack Club" },
+    { href: "https://therealduckers.github.io/WebCue", alt: "WebCue", text: "WebCue" },
+    { href: "https://blog.duckers.dev", alt: "Blog", text: "Duckers Blog" },
+    { href: "https://github.com/TheRealDuckers", alt: "GitHub", text: "GitHub" },
+    { href: "https://web3forms.com", alt: "Web3Forms", text: "Web3Forms" },
+    { href: "https://nowplaying.aesthetics.lol", alt: "Now Playing", text: "Now Playing" },
+    { href: "https://youtu.be/dQw4w9WgXcQ", alt: "Do Not Click", text: "Do Not Click" },
   ];
 
   buttons.forEach((b) => {
@@ -71,11 +79,16 @@
     a.target = "_blank";
     a.rel = "noopener";
     a.title = b.alt;
-    const img = document.createElement("img");
-    img.src = b.img;
-    img.alt = b.alt;
-    img.loading = "lazy";
-    a.appendChild(img);
+    if (b.img) {
+      const img = document.createElement("img");
+      img.src = b.img;
+      img.alt = b.alt;
+      img.loading = "lazy";
+      a.appendChild(img);
+    } else {
+      a.className = "buttons-text";
+      a.textContent = b.text;
+    }
     buttonsGrid.appendChild(a);
   });
 
