@@ -61,16 +61,9 @@
   const buttonsGrid = document.getElementById("buttons-grid");
 
   const buttons = [
-    /* add your real buttons here — format:
-       { img: "assets/buttons/yourbutton.png", href: "https://example.com", alt: "Button Name" }
-       below are placeholders; replace or delete them. */
-    { href: "https://hackclub.com", alt: "Hack Club", text: "Hack Club" },
-    { href: "https://therealduckers.github.io/WebCue", alt: "WebCue", text: "WebCue" },
-    { href: "https://blog.duckers.dev", alt: "Blog", text: "Duckers Blog" },
-    { href: "https://github.com/TheRealDuckers", alt: "GitHub", text: "GitHub" },
-    { href: "https://web3forms.com", alt: "Web3Forms", text: "Web3Forms" },
-    { href: "https://nowplaying.aesthetics.lol", alt: "Now Playing", text: "Now Playing" },
-    { href: "https://youtu.be/dQw4w9WgXcQ", alt: "Do Not Click", text: "Do Not Click" },
+    { href: "https://duckers.dev", alt: "me :)", img: "https://duckers.dev/button.gif" },
+    { href: "https://gideon.sh", alt: "this site is actually pretty cool", img: "https://gideon.sh/88x31.gif" },
+    
   ];
 
   buttons.forEach((b) => {
@@ -83,7 +76,6 @@
       const img = document.createElement("img");
       img.src = b.img;
       img.alt = b.alt;
-      img.loading = "lazy";
       a.appendChild(img);
     } else {
       a.className = "buttons-text";
@@ -97,6 +89,21 @@
     buttonsClose.addEventListener("click", () => { buttonsOverlay.classList.remove("active"); });
     buttonsOverlay.addEventListener("click", (e) => { if (e.target === buttonsOverlay) buttonsOverlay.classList.remove("active"); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") buttonsOverlay.classList.remove("active"); });
+  }
+
+  const buttonsCopyBtn = document.getElementById("buttons-copy");
+  const buttonsCode = document.getElementById("buttons-code");
+  if (buttonsCopyBtn && buttonsCode) {
+    buttonsCopyBtn.addEventListener("click", async () => {
+      buttonsCode.select();
+      try {
+        await navigator.clipboard.writeText(buttonsCode.value);
+      } catch {
+        document.execCommand("copy");
+      }
+      buttonsCopyBtn.textContent = "copied";
+      setTimeout(() => { buttonsCopyBtn.textContent = "copy"; }, 1500);
+    });
   }
 
   /* contact form */
