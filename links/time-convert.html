@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Decimal Time Converter</title>
+
+  <style>
+    :root {
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --dark: #172033;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --background: #f8fafc;
+      --white: #ffffff;
+      --green: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--background);
+      color: var(--dark);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 720px;
+      padding: 32px;
+      background: var(--white);
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      line-height: 1.1;
+    }
+
+    .intro {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .step {
+      margin-bottom: 22px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-weight: 700;
+    }
+
+    .step-title {
+      display: inline;
+      font-size: 1.15rem;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--dark);
+      background: white;
+      font-size: 1.15rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--blue);
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .error {
+      min-height: 24px;
+      margin-top: 12px;
+      color: #b91c1c;
+      font-weight: 600;
+    }
+
+    .result {
+      display: none;
+      margin-top: 22px;
+      padding: 22px;
+      border: 2px solid #bbf7d0;
+      border-radius: 14px;
+      background: #f0fdf4;
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .result h2 {
+      margin: 0 0 18px;
+      color: var(--green);
+      font-size: 1.3rem;
+    }
+
+    .time-display {
+      margin-bottom: 20px;
+      padding: 18px;
+      border-radius: 10px;
+      background: white;
+      color: var(--dark);
+      text-align: center;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .time-parts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .time-part {
+      padding: 14px 8px;
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+    }
+
+    .time-part strong {
+      display: block;
+      font-size: 1.7rem;
+    }
+
+    .time-part span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .working {
+      margin: 20px 0 0;
+      padding: 16px;
+      border-left: 4px solid var(--blue);
+      background: var(--blue-light);
+      line-height: 1.7;
+    }
+
+    .working strong {
+      color: var(--blue);
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 12px;
+      }
+
+      .app {
+        padding: 20px;
+        border-radius: 14px;
+      }
+
+      .step {
+        padding: 18px;
+      }
+
+      .time-parts {
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <h1>Decimal Time Converter</h1>
+    <p class="intro">
+      Turn decimalised hours into normal hours, minutes, and seconds.
+      For example, <strong>2.5 hours = 2 hours 30 minutes</strong>.
+    </p>
+
+    <section class="step">
+      <span class="step-number">1</span>
+      <h2 class="step-title">Enter decimalised hours</h2>
+
+      <label for="decimalHours">Decimal hours</label>
+      <input
+        id="decimalHours"
+        type="number"
+        inputmode="decimal"
+        min="0"
+        step="any"
+        placeholder="Example: 2.5"
+        autocomplete="off"
+      />
+
+      <p class="hint">
+        You can enter whole numbers or decimals, such as 2, 2.5, or 7.75.
+      </p>
+
+      <div id="error" class="error" role="alert"></div>
+
+      <button id="convertButton" type="button">
+        Convert to hours, minutes and seconds
+      </button>
+    </section>
+
+    <section id="result" class="result" aria-live="polite">
+      <h2>2. Your converted time</h2>
+
+      <div id="timeDisplay" class="time-display">00:00:00</div>
+
+      <div class="time-parts">
+        <div class="time-part">
+          <strong id="hoursOutput">0</strong>
+          <span>HOURS</span>
+        </div>
+
+        <div class="time-part">
+          <strong id="minutesOutput">0</strong>
+          <span>MINUTES</span>
+        </div>
+
+        <div class="time-part">
+          <strong id="secondsOutput">0</strong>
+          <span>SECONDS</span>
+        </div>
+      </div>
+
+      <div class="working">
+        <strong>3. How it was worked out</strong>
+        <div id="workingText"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const decimalInput = document.getElementById("decimalHours");
+    const convertButton = document.getElementById("convertButton");
+    const errorMessage = document.getElementById("error");
+    const result = document.getElementById("result");
+
+    const hoursOutput = document.getElementById("hoursOutput");
+    const minutesOutput = document.getElementById("minutesOutput");
+    const secondsOutput = document.getElementById("secondsOutput");
+    const timeDisplay = document.getElementById("timeDisplay");
+    const workingText = document.getElementById("workingText");
+
+    function formatTwoDigits(number) {
+      return String(number).padStart(2, "0");
+    }
+
+    function convertTime() {
+      const inputValue = decimalInput.value.trim();
+      const decimalHours = Number(inputValue);
+
+      errorMessage.textContent = "";
+
+      if (inputValue === "") {
+        result.classList.remove("visible");
+        errorMessage.textContent = "Please enter a decimal number of hours.";
+        decimalInput.focus();
+        return;
+      }
+
+      if (!Number.isFinite(decimalHours) || decimalHours < 0) {
+        result.classList.remove("visible");
+        errorMessage.textContent = "Please enter a valid number equal to or greater than 0.";
+        decimalInput.focus();
+        return;
+      }
+
+      /*
+        Convert everything to seconds first.
+        Rounding avoids awkward floating-point results such as
+        29 minutes and 59.999999 seconds.
+      */
+      const totalSeconds = Math.round(decimalHours * 60 * 60);
+
+      const hours = Math.floor(totalSeconds / 3600);
+      const remainingSeconds = totalSeconds % 3600;
+      const minutes = Math.floor(remainingSeconds / 60);
+      const seconds = remainingSeconds % 60;
+
+      hoursOutput.textContent = hours;
+      minutesOutput.textContent = minutes;
+      secondsOutput.textContent = seconds;
+
+      timeDisplay.textContent =
+        `${formatTwoDigits(hours)}:${formatTwoDigits(minutes)}:${formatTwoDigits(seconds)}`;
+
+      const minutesDecimal = decimalHours * 60;
+      const wholeMinutes = Math.floor(minutesDecimal);
+      const leftoverSeconds = Math.round((minutesDecimal - wholeMinutes) * 60);
+
+      workingText.innerHTML = `
+        <div>${decimalHours} hours × 60 = <strong>${minutesDecimal.toFixed(4)} minutes</strong></div>
+        <div>Whole minutes = <strong>${wholeMinutes} minutes</strong></div>
+        <div>Remaining fraction converted to seconds = <strong>${leftoverSeconds} seconds</strong></div>
+      `;
+
+      result.classList.add("visible");
+    }
+
+    convertButton.addEventListener("click", convertTime);
+
+    decimalInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        convertTime();
+      }
+    });
+
+    decimalInput.addEventListener("input", function () {
+      errorMessage.textContent = "";
+    });
+  </script>
+</body>
+</html>
