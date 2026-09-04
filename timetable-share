@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTable Share</title>
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- ICAL.js for Reliable ICS Parsing -->
+    <script src="https://cloudflare.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen font-sans">
+
+    <!-- Deep Blue Header -->
+    <header class="bg-blue-900 text-white py-6 shadow-md">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-2xl font-bold tracking-wide">TimeTable Share</h1>
+            <p class="text-blue-200 text-sm mt-1">Share a read-only view of your timetable.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+        
+        <!-- Main Form Card -->
+        <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Create a Sharing Link</h2>
+            
+            <!-- Instructions -->
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-6 text-sm text-blue-950">
+                <p class="font-semibold mb-1">How to find your iCal link:</p>
+                <ol class="list-decimal list-inside space-y-1 text-blue-900">
+                    <li>Go to your scheduling or university platform.</li>
+                    <li>Look for "Export", "Calendar Sync", or "Feeds".</li>
+                    <li>Copy the URL ending in <code class="bg-blue-100 px-1 rounded font-mono">.ics</code> or starting with <code class="bg-blue-100 px-1 rounded font-mono">webcal://</code>.</li>
+                </ol>
+            </div>
+
+            <!-- Inputs -->
+            <div class="space-y-4">
+                <div>
+                    <label for="ical-link" class="block text-sm font-medium text-gray-700 mb-1">Your iCal / ICS link:</label>
+                    <input type="url" id="ical-link" placeholder="https://example.com" 
+                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p id="error-msg" class="text-red-600 text-xs mt-1 hidden"></p>
+                </div>
+
+                <button id="btn-generate" class="bg-green-600 hover:bg-green-700 text-white font-medium text-sm px-4 py-2 rounded transition-colors shadow-sm">
+                    Create sharing link
+                </button>
+
+                <!-- Result Box (Hidden by default) -->
+                <div id="result-container" class="pt-4 border-t border-gray-100 hidden">
+                    <label for="share-link" class="block text-sm font-medium text-gray-700 mb-1">Your share link:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="share-link" readonly 
+                               class="flex-1 bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm font-mono text-gray-600 select-all">
+                        <button id="btn-copy" class="bg-gray-800 hover:bg-gray-950 text-white font-medium text-sm px-4 py-2 rounded transition-colors">
+                            Copy
+                        </button>
+                    </div>
+                    <p id="copy-success" class="text-green-600 text-xs mt-1 hidden">✓ Copied to clipboard!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Timetable View Section -->
+        <section id="timetable-section" class="hidden space-y-4">
+            <div class="border-b border-gray-200 pb-2">
+                <h2 class="text-xl font-bold text-gray-900">Your Timetable</h2>
+                <p class="text-sm text-gray-500">Upcoming events extracted from the shared feed.</p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="calendar-loading" class="text-center py-12 text-gray-500 font-medium">
+                Loading schedule data...
+            </div>
+
+            <!-- Error State (e.g. CORS block) -->
+            <div id="calendar-error" class="hidden bg-amber-50 border border-amber-200 rounded p-6 text-sm text-amber-950 space-y-3">
+                <p class="font-bold text-base text-amber-800">Unable to load calendar feed directly</p>
+                <p>This layout is a static webpage. Your calendar platform blocked the request due to browser security restrictions (**CORS**).</p>
+                <div class="bg-white p-3 rounded border border-amber-100">
+                    <p class="font-semibold mb-1">How to view your schedule:</p>
+                    <p>You can subscribe manually by copying your original ICS link and adding it directly to apps like Google Calendar, Apple Calendar, or Outlook.</p>
+                </div>
+                <p class="text-xs text-amber-700 font-mono break-all" id="raw-failed-url"></p>
+            </div>
+
+            <!-- Mobile-friendly Upcoming Events List View -->
+            <div id="events-list" class="space-y-3 hidden"></div>
+        </section>
+
+        <!-- Privacy Reminder Notice -->
+        <footer class="bg-gray-100 rounded-lg p-4 text-xs text-gray-500 border border-gray-200">
+            <p class="font-semibold text-gray-700 mb-1">Privacy Notice:</p>
+            Anyone with this sharing link may be able to view your schedule. Do not share generated links with individuals you do not trust. To revoke access, regenerate or change the secret iCal token within your original scheduling software.
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const icalInput = document.querySelector("#ical-link");
+            const errorMsg = document.querySelector("#error-msg");
+            const btnGenerate = document.querySelector("#btn-generate");
+            const resultContainer = document.querySelector("#result-container");
+            const shareLinkInput = document.querySelector("#share-link");
+            const btnCopy = document.querySelector("#btn-copy");
+            const copySuccess = document.querySelector("#copy-success");
+
+            const timetableSection = document.querySelector("#timetable-section");
+            const calendarLoading = document.querySelector("#calendar-loading");
+            const calendarError = document.querySelector("#calendar-error");
+            const eventsList = document.querySelector("#events-list");
+            const rawFailedUrl = document.querySelector("#raw-failed-url");
+
+            // --- 1. Generation Logic ---
+            btnGenerate.addEventListener("click", () => {
+                errorMsg.classList.add("hidden");
+                let icalLink = icalInput.value.trim();
+
+                if (!icalLink) return;
+
+                // Normalize webcal protocol if present
+                if (icalLink.startsWith("webcal://")) {
+                    icalLink = icalLink.replace("webcal://", "https://");
+                }
+
+                // Validation
+                try {
+                    const url = new URL(icalLink);
+                    if (url.protocol !== "https:" && url.protocol !== "http:") {
+                        throw new Error("Please use a valid web link (http/https).");
+                    }
+                } catch (e) {
+                    errorMsg.textContent = "Please enter a valid web calendar link.";
+                    errorMsg.classList.remove("hidden");
+                    return;
+                }
+
+                // Create parameters safely
+                const shareUrl = new URL(window.location.origin + window.location.pathname);
+                shareUrl.searchParams.set("calendar", icalLink);
+                
+                shareLinkInput.value = shareUrl.toString();
+                resultContainer.classList.remove("hidden");
+            });
+
+            // Clipboard Copy Interaction
+            btnCopy.addEventListener("click", async () => {
+                try {
+                    await navigator.clipboard.writeText(shareLinkInput.value);
+                    copySuccess.classList.remove("hidden");
+                    setTimeout(() => copySuccess.classList.add("hidden"), 3000);
+                } catch (err) {
+                    shareLinkInput.select();
+                }
+            });
+
+            // --- 2. Consumption Logic (?calendar=) ---
+            const params = new URLSearchParams(window.location.search);
+            const calendarUrl = params.get("calendar");
+
+            if (calendarUrl) {
+                timetableSection.classList.remove("hidden");
+                loadCalendar(calendarUrl);
+            }
+
+            async function loadCalendar(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Network issue loading calendar.");
+                    
+                    const icsText = await response.text();
+                    parseAndDisplayEvents(icsText);
+                } catch (err) {
+                    // Fail gracefully on CORS blocks or broken links
+                    calendarLoading.classList.add("hidden");
+                    rawFailedUrl.textContent = `Target Feed: ${url}`;
+                    calendarError.classList.remove("hidden");
+                }
+            }
+
+            function parseAndDisplayEvents(icsData) {
+                try {
+                    // Parse text data using ICAL.js component trees
+                    const jcalData = ICAL.parse(icsData);
+                    const comp = new ICAL.Component(jcalData);
+                    const vevents = comp.getAllSubcomponents("vevent");
+
+                    // Map down into pure clean JS objects
+                    let events = vevents.map(vevent => {
+                        const event = new ICAL.Event(vevent);
+                        return {
+title: event.summary || "Untitled Event",start: event.startDate ? event.startDate.toJSDate() : null,end: event.endDate ? event.endDate.toJSDate() : null,location: event.location || ""};});events = events.filter(e => e.start !== null).sort((a, b) => a.start - b.start);calendarLoading.classList.add("hidden");if (events.length === 0) {eventsList.innerHTML = <p class="text-sm text-gray-500 py-4 text-center">No upcoming events found inside this feed.</p>;eventsList.classList.remove("hidden");return;}// Render out structured phone-friendly listseventsList.innerHTML = events.map(ev => {const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };const timeOptions = { hour: '2-digit', minute: '2-digit' };const dateStr = ev.start.toLocaleDateString(undefined, dateOptions);const timeStr = ev.end ?${ev.start.toLocaleTimeString(undefined, timeOptions)} - ${ev.end.toLocaleTimeString(undefined, timeOptions)} :ev.start.toLocaleTimeString(undefined, timeOptions);return <div class="bg-white border border-gray-200 rounded p-4 flex flex-col md:flex-row md:items-center justify-between gap-2 shadow-xs"> <div> <h3 class="font-semibold text-gray-900">${escapeHtml(ev.title)}</h3> ${ev.location ?📍 ${escapeHtml(ev.location)}: ''} </div> <div class="text-left md:text-right shrink-0"> <p class="text-sm font-medium text-blue-900">${dateStr}</p> <p class="text-xs text-gray-500">${timeStr}</p> </div> </div>;}).join('');eventsList.classList.remove("hidden");} catch (e) {calendarLoading.classList.add("hidden");calendarError.querySelector('p').textContent = "Failed to parse data structural standards.";calendarError.classList.remove("hidden");}}/function escapeHtml(str) {return str.replace(/[&<>"']/g, m => ({'&': '&', '<': '<', '>': '>', '"': '"', "'": '''})[m]);}});
