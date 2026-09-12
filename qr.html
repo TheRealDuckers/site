@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>QR Code Generator</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- QR Code library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          boxShadow: {
+            glow: "0 0 50px rgba(99, 102, 241, 0.18)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900 transition-colors dark:bg-slate-950 dark:text-white">
+
+  <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <header class="mb-8 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          <path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 21h3M21 14h-3"></path>
+        </svg>
+        Simple QR Generator
+      </div>
+
+      <h1 class="text-4xl font-black tracking-tight sm:text-5xl">
+        Create a QR code
+      </h1>
+
+      <p class="mx-auto mt-3 max-w-xl text-base text-slate-600 dark:text-slate-400">
+        Generate a customizable QR code for links, text, contact details, and more.
+      </p>
+    </header>
+
+    <!-- Main card -->
+    <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-glow dark:border-slate-800 dark:bg-slate-900">
+      <div class="grid lg:grid-cols-[1fr_0.9fr]">
+
+        <!-- Settings -->
+        <section class="p-6 sm:p-8">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold">Customize your QR code</h2>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Adjust the content and appearance below.
+            </p>
+          </div>
+
+          <div class="space-y-5">
+            <div>
+              <label for="code" class="mb-2 block text-sm font-semibold">
+                Text or URL
+              </label>
+
+              <textarea
+                id="code"
+                rows="4"
+                placeholder="https://example.com"
+                class="w-full resize-y rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-950 dark:placeholder:text-slate-600"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="title" class="mb-2 block text-sm font-semibold">
+                Title
+                <span class="font-normal text-slate-400">(optional)</span>
+              </label>
+
+              <input
+                id="title"
+                type="text"
+                placeholder="Scan me"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-950 dark:placeholder:text-slate-600"
+              />
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="size" class="mb-2 block text-sm font-semibold">
+                  Size
+                </label>
+
+                <div class="relative">
+                  <input
+                    id="size"
+                    type="number"
+                    min="100"
+                    max="2000"
+                    value="300"
+                    class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-14 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-950"
+                  />
+                  <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                    px
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label for="margin" class="mb-2 block text-sm font-semibold">
+                  Margin
+                </label>
+
+                <div class="relative">
+                  <input
+                    id="margin"
+                    type="number"
+                    min="0"
+                    max="50"
+                    value="4"
+                    class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-16 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-950"
+                  />
+                  <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                    units
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="ecc" class="mb-2 block text-sm font-semibold">
+                Error correction
+              </label>
+
+              <select
+                id="ecc"
+                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-700 dark:bg-slate-950"
+              >
+                <option value="L">Low — 7%</option>
+                <option value="M" selected>Medium — 15%</option>
+                <option value="Q">Quartile — 25%</option>
+                <option value="H">High — 30%</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+              <div>
+                <label for="dark" class="mb-2 block text-sm font-semibold">
+                  QR color
+                </label>
+
+                <div class="flex items-center gap-3 rounded-xl border border-slate-300 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-950">
+                  <input
+                    id="dark"
+                    type="color"
+                    value="#000000"
+                    class="h-9 w-12 cursor-pointer rounded-lg border-0 bg-transparent"
+                  />
+                  <span id="darkValue" class="font-mono text-xs text-slate-500">
+                    #000000
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label for="light" class="mb-2 block text-sm font-semibold">
+                  Background
+                </label>
+
+                <div class="flex items-center gap-3 rounded-xl border border-slate-300 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-950">
+                  <input
+                    id="light"
+                    type="color"
+                    value="#ffffff"
+                    class="h-9 w-12 cursor-pointer rounded-lg border-0 bg-transparent"
+                  />
+                  <span id="lightValue" class="font-mono text-xs text-slate-500">
+                    #ffffff
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              id="downloadButton"
+              type="button"
+              class="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700 active:scale-[0.99]"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12"></path>
+                <path d="m7 10 5 5 5-5"></path>
+                <path d="M5 21h14"></path>
+              </svg>
+              Download PNG
+            </button>
+          </div>
+        </section>
+
+        <!-- Preview -->
+        <section class="flex min-h-[500px] flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-6 dark:from-indigo-950/30 dark:via-slate-900 dark:to-purple-950/30 sm:p-8">
+          <div class="mb-6 text-center">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+              Live preview
+            </p>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Your QR code updates automatically
+            </p>
+          </div>
+
+          <div class="w-full max-w-sm rounded-3xl border border-white/80 bg-white/80 p-6 shadow-xl shadow-indigo-900/10 backdrop-blur dark:border-slate-700/80 dark:bg-slate-800/80">
+            <h2 id="titlePreview" class="mb-5 break-words text-center text-xl font-bold"></h2>
+
+            <div class="flex min-h-[260px] items-center justify-center overflow-auto rounded-2xl bg-white p-4">
+              <div id="qrcode">
+                <span class="text-sm text-slate-400">
+                  Your QR code will appear here
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <p class="mt-6 text-center text-xs text-slate-500 dark:text-slate-500">
+      Tip: You can also configure the page using URL parameters.
+    </p>
+  </main>
+
+  <script>
+    const fields = {
+      code: document.getElementById("code"),
+      title: document.getElementById("title"),
+      size: document.getElementById("size"),
+      ecc: document.getElementById("ecc"),
+      dark: document.getElementById("dark"),
+      light: document.getElementById("light"),
+      margin: document.getElementById("margin")
+    };
+
+    const titlePreview = document.getElementById("titlePreview");
+    const qrContainer = document.getElementById("qrcode");
+    const downloadButton = document.getElementById("downloadButton");
+    const darkValue = document.getElementById("darkValue");
+    const lightValue = document.getElementById("lightValue");
+
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+
+      for (const [name, element] of Object.entries(fields)) {
+        if (params.has(name)) {
+          element.value = params.get(name);
+        }
+      }
+
+      // Alternative parameter names
+      if (params.has("text")) {
+        fields.code.value = params.get("text");
+      }
+
+      if (params.has("color")) {
+        fields.dark.value = params.get("color");
+      }
+
+      if (params.has("background")) {
+        fields.light.value = params.get("background");
+      }
+    }
+
+    function normalizeHexColor(value, fallback) {
+      return /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
+    }
+
+    function generateQRCode() {
+      const code = fields.code.value.trim();
+      const title = fields.title.value.trim();
+
+      titlePreview.textContent = title;
+      darkValue.textContent = fields.dark.value.toUpperCase();
+      lightValue.textContent = fields.light.value.toUpperCase();
+
+      qrContainer.innerHTML = "";
+
+      if (!code) {
+        qrContainer.innerHTML = `
+          <span class="text-sm text-slate-400">
+            Your QR code will appear here
+          </span>
+        `;
+        return;
+      }
+
+      const size = Math.max(
+        100,
+        Math.min(2000, Number(fields.size.value) || 300)
+      );
+
+      const margin = Math.max(
+        0,
+        Math.min(50, Number(fields.margin.value) || 0)
+      );
+
+      const dark = normalizeHexColor(fields.dark.value, "#000000");
+      const light = normalizeHexColor(fields.light.value, "#ffffff");
+
+      qrContainer.style.padding = `${margin}px`;
+
+      new QRCode(qrContainer, {
+        text: code,
+        width: size,
+        height: size,
+        colorDark: dark,
+        colorLight: light,
+        correctLevel:
+          QRCode.CorrectLevel[fields.ecc.value] ||
+          QRCode.CorrectLevel.M
+      });
+    }
+
+    function downloadQRCode() {
+      const canvas = qrContainer.querySelector("canvas");
+      const image = qrContainer.querySelector("img");
+
+      let dataUrl;
+
+      if (canvas) {
+        dataUrl = canvas.toDataURL("image/png");
+      } else if (image) {
+        dataUrl = image.src;
+      } else {
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "qr-code.png";
+      link.click();
+    }
+
+    Object.values(fields).forEach((field) => {
+      field.addEventListener("input", generateQRCode);
+      field.addEventListener("change", generateQRCode);
+    });
+
+    downloadButton.addEventListener("click", downloadQRCode);
+
+    getUrlParams();
+    generateQRCode();
+
+    const autoDownload = new URLSearchParams(
+      window.location.search
+    ).get("download");
+
+    if (autoDownload === "true") {
+      setTimeout(downloadQRCode, 500);
+    }
+  </script>
+</body>
+</html>
