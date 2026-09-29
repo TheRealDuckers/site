@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | Duckers Dev</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --accent-red: #ff0000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Bold flashlight spotlight effect following the mouse */
+        #flashlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 0, 0, 0.25), transparent 100%);
+        }
+
+        .content {
+            max-width: 700px;
+            width: 100%;
+            text-align: left; /* Switched to left-aligned for a bolder editorial layout */
+            position: relative;
+            z-index: 10;
+        }
+
+        .code-404 {
+            font-size: 9rem;
+            font-weight: 900;
+            color: var(--accent-red);
+            line-height: 0.8;
+            letter-spacing: -4px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .highlight {
+            color: var(--accent-red);
+        }
+
+        p {
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 3.5rem;
+            max-width: 600px;
+            color: #e0e0e0;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .btn {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem 2rem;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-red);
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--text-main);
+            color: var(--bg-color);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            padding-left: 0; /* Keep baseline alignment tidy */
+        }
+
+        .btn-secondary:hover {
+            color: var(--accent-red);
+        }
+
+        @media (max-width: 600px) {
+            .code-404 { font-size: 6rem; }
+            h1 { font-size: 2rem; }
+            p { font-size: 1.1rem; }
+            .action-links { flex-direction: column; gap: 1rem; }
+            .btn { text-align: center; width: 100%; }
+            .btn-secondary { padding-left: 2rem; }
+            #flashlight { display: none; } /* Disable logic layer on small mobile sizes */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simple, non-intrusive backdrop illumination element -->
+    <div id="flashlight"></div>
+
+    <div class="content">
+        <div class="code-404">404</div>
+        
+        <h1>Congrats explorer, you have found something amazing: <span class="highlight">my 404 page.</span></h1>
+        
+        <p>
+            Out of billions of beautifully rendered, working hyperlinks across the vast cosmos of my server network, your impeccable pathfinding skills have guided you right into this absolute void of nothingness. Outstanding work.
+        </p>
+
+        <div class="action-links">
+            <a href="https://duckers.dev/" class="btn btn-primary">Go to the Home Page</a>
+            <a href="#" onclick="history.back(); return false;" class="btn btn-secondary">Go Back</a>
+        </div>
+    </div>
+
+    <script>
+        const flashlight = document.getElementById('flashlight');
+
+        // Graceful cursor tracking for the ambient red background spotlight
+        window.addEventListener('mousemove', (e) => {
+            flashlight.style.setProperty('--mouse-x', `${(e.clientX / window.innerWidth) * 100}%`);
+            flashlight.style.setProperty('--mouse-y', `${(e.clientY / window.innerHeight) * 100}%`);
+        });
+    </script>
+
+</body>
+</html>
