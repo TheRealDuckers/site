@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7413dc">
+  <title>GB8 BAS | JOTA links</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --purple: #7413dc;
+      --purple-dark: #4b168c;
+      --purple-pale: #f3ebfc;
+      --ink: #211b2b;
+      --muted: #625b6b;
+      --paper: #fbf9fe;
+      --line: #e2d8ed;
+      --white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(100% - 40px, 1000px);
+      margin: 0 auto;
+    }
+
+    header {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 2px solid var(--purple);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--purple-dark);
+      font-size: 1.08rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .mast {
+      width: 34px;
+      height: 34px;
+      color: var(--purple);
+    }
+
+    .event-note {
+      color: var(--purple-dark);
+      font-size: .88rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    main { padding: 54px 0 56px; }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--purple);
+      font-size: .8rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 700px;
+      margin: 0;
+      color: var(--purple-dark);
+      font-size: clamp(2.5rem, 8vw, 4.8rem);
+      font-weight: 900;
+      letter-spacing: -.055em;
+      line-height: .98;
+    }
+
+    .intro {
+      max-width: 700px;
+      margin: 22px 0 38px;
+      color: #494151;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .intro strong { color: var(--purple-dark); }
+
+    .intro a {
+      color: var(--purple);
+      font-weight: 900;
+      text-underline-offset: 3px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .link-section + .link-section { margin-top: 32px; }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--purple-dark);
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .link-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .link-row {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border: 2px solid var(--line);
+      border-left: 6px solid var(--purple);
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: 0 2px 0 rgba(75, 22, 140, .04);
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+
+    .link-row:hover {
+      transform: translateY(-2px);
+      border-color: var(--purple);
+      background: var(--purple-pale);
+    }
+
+    .link-row:focus-visible {
+      outline: 3px solid var(--purple);
+      outline-offset: 3px;
+    }
+
+    .link-title {
+      display: block;
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .link-note {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 600;
+    }
+
+    .arrow {
+      flex: 0 0 auto;
+      color: var(--purple);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    aside {
+      padding: 20px;
+      border: 2px solid var(--purple);
+      border-radius: 12px;
+      background: var(--purple-pale);
+    }
+
+    aside h2 { margin-bottom: 12px; }
+
+    aside p {
+      margin: 0 0 12px;
+      color: #494151;
+      font-size: .93rem;
+      font-weight: 600;
+    }
+
+    aside p:last-child { margin-bottom: 0; }
+
+    .callsign {
+      color: var(--purple-dark);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0 24px;
+      border-top: 2px solid var(--line);
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+      .page { width: min(100% - 32px, 560px); }
+
+      header { min-height: 70px; }
+
+      main { padding: 40px 0 38px; }
+
+      .intro { margin: 18px 0 30px; }
+
+      .columns {
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+
+      .link-section + .link-section { margin-top: 28px; }
+
+      aside { order: -1; }
+    }
+
+    @media (max-width: 420px) {
+      .page { width: calc(100% - 24px); }
+
+      .brand { gap: 8px; font-size: 1rem; }
+      .mast { width: 30px; height: 30px; }
+      .event-note { max-width: 130px; font-size: .78rem; }
+
+      main { padding-top: 32px; }
+
+      h1 { font-size: clamp(2.45rem, 13vw, 3.5rem); }
+
+      .intro { font-size: 1rem; }
+
+      .link-row {
+        min-height: 72px;
+        padding: 12px;
+      }
+
+      .link-title { font-size: .96rem; }
+      .link-note { font-size: .82rem; }
+
+      footer { flex-direction: column; gap: 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <svg class="mast" viewBox="0 0 40 40" fill="none"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 4 11 36M20 4l9 32M14 26h12M16 19h8M18 12h4M9 36h22"
+                stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          <path d="M20 5v-3M17 8h6" stroke="currentColor"
+                stroke-width="1.9" stroke-linecap="round"/>
+        </svg>
+        <span>GB8 BAS</span>
+      </div>
+      <div class="event-note">Jamboree on the Air</div>
+    </header>
+
+    <main>
+      <p class="eyebrow">Basingstoke · JOTA</p>
+      <h1>Useful links<br>from the airwaves.</h1>
+
+      <p class="intro">
+        A few good places to learn more about amateur radio, find out what
+        JOTA is all about, and keep exploring after your visit to the station.
+        <br><br>
+        <strong>
+          Want to know more about the club that organised JOTA, or maybe join?
+          <a href="https://basingstokearc.co.uk/">Visit the club website.</a>
+        </strong>
+      </p>
+
+      <div class="columns">
+        <div>
+          <section class="link-section" aria-labelledby="radio-heading">
+            <h2 id="radio-heading">Radio &amp; callsigns</h2>
+            <div class="link-list">
+              <a class="link-row" href="https://rsgb.org/main/get-started-in-amateur-radio/">
+                <span>
+                  <span class="link-title">Getting started in amateur radio</span>
+                  <span class="link-note">A beginner’s guide from the RSGB</span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+
+              <a class="link-row" href="https://www.ofcom.org.uk/spectrum/radio-equipment/licensing-portals">
+                <span>
+                  <span class="link-title">Ofcom radio licensing</span>
+                  <span class="link-note">UK amateur radio licences and services</span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+
+              <a class="link-row" href="https://www.rsgb.org/">
+                <span>
+                  <span class="link-title">Radio Society of Great Britain</span>
+                  <span class="link-note">News, events and resources for radio amateurs</span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </section>
+
+          <section class="link-section" aria-labelledby="scouts-heading">
+            <h2 id="scouts-heading">JOTA &amp; Scouts</h2>
+            <div class="link-list">
+              <a class="link-row" href="https://www.jotajoti.info/jota">
+                <span>
+                  <span class="link-title">Jamboree on the Air</span>
+                  <span class="link-note">Find out more about JOTA around the world</span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+
+              <a class="link-row" href="https://www.jotajoti.info/">
+                <span>
+                  <span class="link-title">JOTA-JOTI</span>
+                  <span class="link-note">Activities and information for Scouts</span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </section>
+        </div>
+
+        <aside>
+          <h2>Getting a license</h2>
+          <p class="callsign">GB8 BAS</p>
+          <p></p>
+          <p>In the UK, you’ll need an amateur radio licence to transmit on amateur
+    radio frequencies. Start by learning the basics and finding out about the
+    Foundation licence exam. The RSGB has beginner resources, and BARC are planning to run a course later this year. Check their website (link in the top title) for updates!</p>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <span>73 — thanks for visiting.</span>
+      <span>GB8 BAS · Basingstoke</span>
+    </footer>
+  </div>
+</body>
+</html>
