@@ -11,12 +11,15 @@
   <meta property="og:url" content="https://duckers.dev/contact.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://duckers.dev/contact.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="cursor"></div>
   <nav class="nav">
-    <a href="index" class="nav-logo">duckers</a>
+    <a href="/" class="nav-logo">duckers</a>
     <div class="nav-links">
       <a href="projects">projects</a>
       <a href="about">about</a>
@@ -28,9 +31,10 @@
     <h2 class="reveal reveal-d1">Let's Chat</h2>
     <div class="contact-grid reveal reveal-d2">
       <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+        <input type="hidden" name="access_key" value="ec99dac2-fd12-4669-83ec-9ff3ef48c519">
         <input type="hidden" name="subject" value="New message from duckers.dev">
         <input type="hidden" name="from_name" value="Duckers Dev">
+        <input type="hidden" name="redirect" value="https://duckers.dev/thanks">
         <input type="text" name="name" placeholder="name" required>
         <input type="email" name="email" placeholder="email" required>
         <textarea name="message" placeholder="message" rows="5" required></textarea>
@@ -58,7 +62,7 @@
     <p id="form-status" class="form-status reveal reveal-d3"></p>
   </div>
   <footer class="footer">
-    <p>&copy; 2026 duckers dev. quack.</p>
+    <p>&copy; 2026 duckers dev. <span class="hand">quack.</span></p>
     <p><a href="https://github.com/TheRealDuckers">github</a> &middot; <a href="https://blog.duckers.dev">blog</a></p>
   </footer>
   <script src="js/main.js"></script>

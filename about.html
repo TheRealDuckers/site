@@ -11,12 +11,15 @@
   <meta property="og:url" content="https://duckers.dev/about.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://duckers.dev/about.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="cursor"></div>
   <nav class="nav">
-    <a href="index" class="nav-logo">duckers</a>
+    <a href="/" class="nav-logo">duckers</a>
     <div class="nav-links">
       <a href="projects">projects</a>
       <a href="about" class="active">about</a>
@@ -36,6 +39,13 @@
       <p>I'm an active member of <strong>Hack Club</strong> and spend my time coding, singing, and creating cool projects. When I'm not coding, you'll find me working on lighting designs or writing blog posts about what I've been building.</p>
       <br>
       <button class="buttons-trigger" id="buttons-open">view my 88 &times; 31 buttons &rarr;</button>
+      <br>
+      <div class="spotify-card" id="spotify-card" hidden data-spotify-url="https://spotify-github-profile.kittinanx.com/api/view?uid=31rbjpiuc44acehukndms4wmii6u&cover_image=true&theme=novatorem&show_offline=true&background_color=121212&interchange=false&profanity=true&hide_remaster=false&bar_color=53b14f&bar_color_cover=true">
+        <p class="spotify-label">now playing</p>
+        <a href="https://github.com/kittinan/spotify-github-profile" target="_blank" rel="noopener" class="spotify-link">
+          <img src="" alt="Spotify now playing" class="spotify-img" id="spotify-img">
+        </a>
+      </div>
     </div>
   </div>
   <div class="buttons-overlay" id="buttons-overlay">
@@ -55,7 +65,7 @@
     </div>
   </div>
   <footer class="footer">
-    <p>&copy; 2026 duckers dev. quack.</p>
+    <p>&copy; 2026 duckers dev. <span class="hand">quack.</span></p>
     <p>
       <a href="https://github.com/TheRealDuckers">github</a> &middot;
       <a href="https://blog.duckers.dev">blog</a>

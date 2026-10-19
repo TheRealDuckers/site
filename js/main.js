@@ -106,6 +106,41 @@
     });
   }
 
+  /* spotify now playing — only shown while actually playing */
+  const spotifyCard = document.getElementById("spotify-card");
+  if (spotifyCard) {
+    const baseUrl = spotifyCard.getAttribute("data-spotify-url");
+    const spotifyImg = document.getElementById("spotify-img");
+    const sep = baseUrl.includes("?") ? "&" : "?";
+    let shown = false;
+
+    const checkNowPlaying = async () => {
+      let playing = false;
+      try {
+        const res = await fetch(baseUrl + sep + "redirect=true&_=" + Date.now(), {
+          mode: "no-cors",
+          redirect: "manual",
+          cache: "no-store"
+        });
+        playing = res.type === "opaqueredirect";
+      } catch {
+        playing = false;
+      }
+
+      if (playing && !shown) {
+        spotifyImg.src = baseUrl + sep + "_=" + Date.now();
+        spotifyCard.hidden = false;
+        shown = true;
+      } else if (!playing && shown) {
+        spotifyCard.hidden = true;
+        shown = false;
+      }
+    };
+
+    checkNowPlaying();
+    setInterval(checkNowPlaying, 30000);
+  }
+
   /* contact form */
   const form = document.querySelector(".contact-form");
   if (form) {
@@ -117,8 +152,11 @@
         const res = await fetch(form.action, { method: "POST", body: new FormData(form) });
         const json = await res.json();
         if (json.success) {
+          const redirectField = form.querySelector('[name="redirect"]');
+          const target = (redirectField && redirectField.value) || "thanks";
           if (status) status.textContent = "sent. quack.";
           form.reset();
+          setTimeout(() => { window.location.href = target; }, 600);
         } else {
           if (status) status.textContent = "failed. try again.";
         }
